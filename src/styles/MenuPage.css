@@ -1,0 +1,605 @@
+/* 在文件開頭添加以下樣式 */
+
+html, body, #root {
+  height: 100%;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+  background-color: #f8f9fa;
+  padding: 20px 0;
+  text-align: center;
+  width: 100%;
+  border-top: 1px solid #e7e7e7;
+}
+
+.footer p {
+  margin: 0;
+  color: #6c757d;
+}
+
+/* 確保 menu-page 和 cart-page 不會被 footer 覆蓋 */
+.menu-page, .cart-page {
+  padding-bottom: 60px; /* 調整此值以確保有足夠的空間容納 footer */
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+.menu-page {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.top-nav {
+  background-color: #fff;
+  padding: 10px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.header-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.header-title {
+  font-size: 24px;
+  color: #026EB7;
+  margin: 0;
+}
+
+.categories-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.categories-nav {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.top-nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  justify-content: flex-start;
+}
+
+.top-nav li {
+  cursor: pointer;
+  padding: 5px 15px;
+  flex-shrink: 0;
+}
+
+.top-nav li.active {
+  color: #026EB7;
+  border-bottom: 2px solid #026EB7;
+}
+
+/* 隱藏滾動條但保留功能 */
+.categories-container::-webkit-scrollbar {
+  display: none;
+}
+
+.categories-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.search-bar {
+  margin: 10px auto;
+  max-width: 600px;
+  padding: 0 15px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+}
+
+.category-title {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.menu-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.menu-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.menu-item h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.menu-item p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.menu-item .price {
+  font-weight: bold;
+  color: #026EB7;
+}
+
+.menu-item .subtotal {
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.quantity-control button {
+  background-color: #f0f0f0;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 28px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.quantity-control button:hover {
+  background-color: #e0e0e0;
+}
+
+.quantity-control span {
+  width: 30px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.add-to-cart {
+  background-color: #026EB7;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  font-size: 16px;
+}
+
+.add-to-cart:hover {
+  background-color: #026EB7;
+}
+
+.cart-container {
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.cart {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.cart:hover {
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.cart-icon {
+  background-color: #474747;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-size: 24px;
+  margin: 10px;
+}
+
+.item-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.cart-summary {
+  padding: 10px;
+}
+
+.cart-summary p {
+  margin: 5px 0;
+}
+
+.cart-summary button {
+  background-color: #026EB7;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cart-summary button:hover {
+  background-color: #015a96;
+}
+
+/* 在文件末尾添加以下樣式 */
+
+.cart-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cart-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.back-button {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #e0e0e0;
+}
+
+.empty-cart {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+.cart-items {
+  margin-bottom: 20px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.cart-item.cart-header {
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+}
+
+.cart-item span {
+  text-align: center;
+}
+
+.cart-item span:first-child {
+  text-align: left;
+}
+
+.remove-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.remove-button:hover {
+  background-color: #ff3333;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+.total-price {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #ff3333;
+}
+
+.checkout-button {
+  background-color: #026EB7;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s;
+}
+
+.checkout-button:hover {
+  background-color: #45a049;
+}
+
+.cart-item .quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-item .quantity-control button {
+  background-color: #f0f0f0;
+  border: none;
+  width: 25px;
+  height: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cart-item .quantity-control button:hover {
+  background-color: #e0e0e0;
+}
+
+.cart-item .quantity-control span {
+  margin: 0 10px;
+}
+
+/* 在文件末尾添加以下樣式 */
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #fff;
+}
+
+.menu-content {
+  padding-top: 20px; /* 添加一些頂部內邊距，以防止內容被 sticky header 遮擋 */
+}
+
+.top-nav {
+  background-color: #fff;
+  padding: 20px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ... 保持其他樣式不變 */
+
+.welcome-page {
+  height: 100vh;
+  background-image: url('../assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 50px;
+}
+
+.welcome-content {
+  text-align: center;
+  color: white;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid white;
+  margin: 20px auto;
+  animation: bounce 2s infinite;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
+.arrow-up:hover {
+  transform: scale(1.1);
+}
+
+.error-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.error-page h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-page p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* 在文件末尾添加以下樣式 */
+
+.confirm-order-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.page-title {
+  text-align: center;
+  color: #026EB7;
+  margin-bottom: 20px;
+}
+
+.order-summary {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.order-summary h3 {
+  margin-top: 0;
+  color: #026EB7;
+}
+
+.order-items {
+  margin-bottom: 15px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.item-name {
+  flex-grow: 1;
+}
+
+.item-quantity, .item-price {
+  margin-left: 10px;
+}
+
+.order-total {
+  font-size: 1.2em;
+  text-align: right;
+}
+
+.total-price {
+  color: #026EB7;
+  font-weight: bold;
+}
+
+.order-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-group textarea {
+  height: 100px;
+}
+
+.confirm-order-button {
+  background-color: #026EB7;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.confirm-order-button:hover {
+  background-color: #015a96;
+}
