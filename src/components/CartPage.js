@@ -17,10 +17,8 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity }) {
 
   return (
     <div className="cart-page">
-      <header className="cart-header">
-        <h2>{t('cart')}</h2>
         <button className="back-button" onClick={() => navigate('/menu')}>{t('back')}</button>
-      </header>
+        <h2 className="page-title">{t('cart')}</h2>
       {items.length === 0 ? (
         <p className="empty-cart">{t('emptyCart')}</p>
       ) : (
@@ -43,11 +41,13 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity }) {
                 </span>
                 <span>${item.price * item.quantity}</span>
               </div>
-            ))}
+            ))}          
+              <div className="order-total">
+                <strong>{t('confirmOrder.total')}：</strong> <span className="total-price">${total}</span>
+              </div>
           </div>
-          <div className="cart-total">
-            <p>{t('total')}: <span className="total-price">${total}</span></p>
-            <button className="checkout-button" onClick={() => navigate('/confirm-order')}>{t('submitOrder')}</button>
+          <div>
+            <button className="confirm-order-button" onClick={() => navigate('/confirm-order')}>{t('confirmOrder.submitOrder')}</button>
           </div>
         </>
       )}

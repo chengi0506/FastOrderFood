@@ -533,8 +533,13 @@ body {
 }
 
 .total-price {
-  color: #026EB7;
+  font-size: 1.2em;
   font-weight: bold;
+  color: #ff3333;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: right;
 }
 
 .order-form {

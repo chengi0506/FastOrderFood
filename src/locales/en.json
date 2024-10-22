@@ -13,7 +13,6 @@
     "noProductsFound": "No related products found",
     "quantity": "Quantity",
     "total": "Total",
-    "confirmOrder": "Confirm Order",
     "placeOrder": "Place Order",
     "orderConfirmed": "Order Confirmed",
     "thankYou": "Thank you for your order",
@@ -24,7 +23,27 @@
     "back": "Back",
     "emptyCart": "The cart is empty",
     "productName": "Product Name",
-    "submitOrder": "Submit Order",
-    "footerText": "©2024 Fast Company Cloud Mobile Ordering System."
+    "footerText": "©2024 Fast Company Cloud Mobile Ordering System.",
+    "confirmOrder": {
+      "title": "Confirm Order",
+      "orderSummary": "Order Summary",
+      "total": "Total",
+      "name": "Name",
+      "mobile": "Mobile",
+      "carrier": "Mobile Carrier",
+      "note": "Note",
+      "submitOrder": "Submit Order"
+    },
+    "orderStatus": {
+      "pending": "Pending"
+    },
+    "success": {
+      "orderPlaced": "Order Placed Successfully",
+      "orderNumber": "Order Number: {{orderId}}"
+    },
+    "errors": {
+      "orderSubmissionFailed": "Order Submission Failed",
+      "tryAgainLater": "Please try again later."
+    }
   }
 }

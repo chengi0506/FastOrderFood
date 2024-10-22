@@ -18,7 +18,7 @@ function Cart({ items }) {
         <div className="cart-summary">
           <p>{t('quantity')}: {totalQuantity}</p>
           <p>{t('total')}: ${total}</p>
-          <button>{t('confirmOrder')}</button>
+          <button>{t('cart')}</button>
         </div>
       </div>
     </div>

@@ -13,7 +13,6 @@
     "noProductsFound": "沒有找到相關商品",
     "quantity": "數量",
     "total": "合計",
-    "confirmOrder": "確認訂單",
     "placeOrder": "下單",
     "orderConfirmed": "訂單已確認",
     "thankYou": "感謝您的訂購",
@@ -24,7 +23,27 @@
     "back": "返回",
     "emptyCart": "購物車是空的",
     "productName": "商品名稱",
-    "submitOrder": "提交訂單",
-    "footerText": "©2024 財團法人農漁會南區資訊中心雲端行動點餐系統"
+    "footerText": "©2024 財團法人農漁會南區資訊中心雲端行動點餐系統",
+    "confirmOrder": {
+      "title": "確認訂單",
+      "orderSummary": "訂單摘要",
+      "total": "總計",
+      "name": "姓名",
+      "mobile": "手機",
+      "carrier": "手機載具",
+      "note": "備註",
+      "submitOrder": "確認訂單"
+    },
+    "orderStatus": {
+      "pending": "待處理"
+    },
+    "success": {
+      "orderPlaced": "訂購成功",
+      "orderNumber": "訂單編號：{{orderId}}"
+    },
+    "errors": {
+      "orderSubmissionFailed": "訂單提交失敗",
+      "tryAgainLater": "請稍後再試。"
+    }
   }
 }
