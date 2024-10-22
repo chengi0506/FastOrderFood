@@ -32,7 +32,8 @@
       "mobile": "手機",
       "carrier": "手機載具",
       "note": "備註",
-      "submitOrder": "確認訂單"
+      "confirmOrder": "確認訂單",
+      "submitOrder": "送出訂單"
     },
     "orderStatus": {
       "pending": "待處理"

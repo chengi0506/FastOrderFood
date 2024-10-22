@@ -47,7 +47,7 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity }) {
               </div>
           </div>
           <div>
-            <button className="confirm-order-button" onClick={() => navigate('/confirm-order')}>{t('confirmOrder.submitOrder')}</button>
+            <button className="confirm-order-button" onClick={() => navigate('/confirm-order')}>{t('confirmOrder.confirmOrder')}</button>
           </div>
         </>
       )}

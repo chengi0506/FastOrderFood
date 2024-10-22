@@ -514,17 +514,22 @@ body {
 .order-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #e0e0e0;
+}
+
+
+.item-name, .item-quantity, .item-price {
+  flex: 1;
+  text-align: left;
 }
 
 .item-name {
-  flex-grow: 1;
+  text-align: left;
 }
 
-.item-quantity, .item-price {
-  margin-left: 10px;
+.item-price {
+  text-align: right;
 }
 
 .order-total {
