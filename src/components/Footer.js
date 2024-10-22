@@ -1,9 +1,14 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 function Footer() {
+  const { t } = useTranslation();
+
   return (
-    <footer className="footer">
-      <p>本系統由財團法人農漁會南區資訊中心設計維護</p>
+    <footer className="app-footer">
+      <div className="footer-content">
+        <p>{t('footerText')}</p>
+      </div>
     </footer>
   );
 }

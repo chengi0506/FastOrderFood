@@ -1,0 +1,24 @@
+.language-selector {
+  /* 移除 position: absolute; */
+  /* 移除 top: 10px; */
+  /* 移除 right: 10px; */
+}
+
+.language-selector select {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.language-selector select:hover {
+  border-color: #888;
+}
+
+.language-selector select:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0,102,204,0.2);
+}

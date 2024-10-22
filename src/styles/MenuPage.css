@@ -49,19 +49,35 @@ body {
   background-color: #fff;
   padding: 10px 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative; /* 添加這一行 */
 }
 
 .header-content {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  padding: 0 10px;
+}
+
+.language-selector-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logo-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.placeholder {
+  flex: 1;
 }
 
 .header-icon {
   width: 40px;
   height: 40px;
-  margin-right: 10px;
 }
 
 .header-title {
@@ -419,67 +435,29 @@ body {
 /* 在文件末尾添加以下樣式 */
 
 .sticky-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   background-color: #fff;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.sticky-header.scrolled {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .menu-content {
-  padding-top: 20px; /* 添加一些頂部內邊距，以防止內容被 sticky header 遮擋 */
+  padding-top: 180px; /* 調整這個值以匹配你的header高度 */
 }
 
 .top-nav {
   background-color: #fff;
-  padding: 20px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 10px 0;
 }
 
 /* ... 保持其他樣式不變 */
-
-.welcome-page {
-  height: 100vh;
-  background-image: url('../assets/background.jpg');
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  padding-bottom: 50px;
-}
-
-.welcome-content {
-  text-align: center;
-  color: white;
-}
-
-.arrow-up {
-  width: 0;
-  height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-bottom: 20px solid white;
-  margin: 20px auto;
-  animation: bounce 2s infinite;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-30px);
-  }
-  60% {
-    transform: translateY(-15px);
-  }
-}
-
-.arrow-up:hover {
-  transform: scale(1.1);
-}
 
 .error-page {
   height: 100vh;
@@ -603,3 +581,89 @@ body {
 .confirm-order-button:hover {
   background-color: #015a96;
 }
+
+.app-footer {
+  background-color: #f8f9fa;
+  padding: 20px 0;
+  text-align: center;
+  border-top: 1px solid #e7e7e7;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.app-footer p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* 添加一些響應式設計 */
+@media (max-width: 768px) {
+  .app-footer {
+    padding: 15px 0;
+  }
+
+  .app-footer p {
+    font-size: 12px;
+  }
+}
+
+/* ... 保持其他樣式不變 ... */
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.App {
+  flex: 1 0 auto;
+}
+
+.app-footer {
+  flex-shrink: 0;
+  background-color: #f8f9fa;
+  padding: 20px 0;
+  text-align: center;
+  border-top: 1px solid #e7e7e7;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.app-footer p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* 添加一些響應式設計 */
+@media (max-width: 768px) {
+  .app-footer {
+    padding: 15px 0;
+  }
+
+  .app-footer p {
+    font-size: 12px;
+  }
+}
+
+/* ... 保持其他樣式不變 ... */

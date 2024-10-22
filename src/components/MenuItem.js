@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { useTranslation } from 'react-i18next';
 
 function MenuItem({ item, addToCart }) {
   const [quantity, setQuantity] = useState(1);
   const [subtotal, setSubtotal] = useState(item.price);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setSubtotal(item.price * quantity);
@@ -24,7 +26,7 @@ function MenuItem({ item, addToCart }) {
     // 顯示 SweetAlert2 toast 通知
     Swal.fire({
       icon: 'success',
-      title: '已加入購物車',
+      title: t('addedToCart'),
       text: `${item.name} x ${quantity}`,
       toast: true,
       position: 'top-end',
@@ -37,14 +39,14 @@ function MenuItem({ item, addToCart }) {
   return (
     <div className="menu-item">
       <h3>{item.name}</h3>
-      <p>單價: ${item.price}</p>
-      <p>小計: ${subtotal}</p>
+      <p>{t('unitPrice')}: ${item.price}</p>
+      <p>{t('subtotal')}: ${subtotal}</p>
       <div className="quantity-control">
         <button onClick={decreaseQuantity}>-</button>
         <span>{quantity}</span>
         <button onClick={increaseQuantity}>+</button>
       </div>
-      <button className="add-to-cart" onClick={handleAddToCart}>加入購物車</button>
+      <button className="add-to-cart" onClick={handleAddToCart}>{t('addToCart')}</button>
     </div>
   );
 }

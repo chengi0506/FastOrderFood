@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function CartPage({ items, removeFromCart, updateCartItemQuantity }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleQuantityChange = (index, newQuantity) => {
@@ -16,19 +18,19 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity }) {
   return (
     <div className="cart-page">
       <header className="cart-header">
-        <h2>購物車</h2>
-        <button className="back-button" onClick={() => navigate('/menu')}>返回</button>
+        <h2>{t('cart')}</h2>
+        <button className="back-button" onClick={() => navigate('/menu')}>{t('back')}</button>
       </header>
       {items.length === 0 ? (
-        <p className="empty-cart">購物車是空的</p>
+        <p className="empty-cart">{t('emptyCart')}</p>
       ) : (
         <>
           <div className="cart-items">
             <div className="cart-item cart-header">
-              <span>商品名稱</span>
-              <span>單價</span>
-              <span>數量</span>
-              <span>小計</span>
+              <span>{t('productName')}</span>
+              <span>{t('unitPrice')}</span>
+              <span>{t('quantity')}</span>
+              <span>{t('subtotal')}</span>
             </div>
             {items.map((item, index) => (
               <div key={index} className="cart-item">
@@ -44,8 +46,8 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity }) {
             ))}
           </div>
           <div className="cart-total">
-            <p>總計: <span className="total-price">${total}</span></p>
-            <button className="checkout-button" onClick={() => navigate('/confirm-order')}>提交訂單</button>
+            <p>{t('total')}: <span className="total-price">${total}</span></p>
+            <button className="checkout-button" onClick={() => navigate('/confirm-order')}>{t('submitOrder')}</button>
           </div>
         </>
       )}

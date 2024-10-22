@@ -7,9 +7,14 @@ import WelcomePage from './components/WelcomePage';
 import ConfirmOrderPage from './components/ConfirmOrderPage';
 import Footer from './components/Footer';
 import OrderConfirmationPage from './components/OrderConfirmationPage';
+import LanguageSelector from './components/LanguageSelector';
 import './styles/MenuPage.css';
+import './styles/App.css';
+import { useTranslation } from 'react-i18next';
+import './i18n';
 
 function App() {
+  const { t, i18n } = useTranslation();
   const [cart, setCart] = useState(() => {
     // 從 localStorage 中讀取購物車內容
     const savedCart = localStorage.getItem('cart');
@@ -63,7 +68,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className="content">
+      <main>
         <Routes>
           <Route path="/" element={<WelcomePage />} />
           <Route path="/menu" element={
@@ -92,7 +97,7 @@ function App() {
             element={<OrderConfirmationPage />} 
           />
         </Routes>
-      </div>
+      </main>
       <Footer />
     </div>
   );

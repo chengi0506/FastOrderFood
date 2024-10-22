@@ -1,5 +1,5 @@
-//const BASE_URL = 'http://localhost:5079/api';
-const BASE_URL = 'http://localhost:7272/api';
+const BASE_URL = 'http://localhost:5079/api';
+//const BASE_URL = 'http://localhost:7272/api';
 //const BASE_URL = 'http://172.16.5.142:9090/api';
 
 export const API_ENDPOINTS = {

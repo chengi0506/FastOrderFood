@@ -1,0 +1,30 @@
+{
+  "translation": {
+    "language": "語言",
+    "welcomeTitle": "歡迎使用雲端行動點餐系統",
+    "swipeUpToOrder": "向上滑動或點選箭頭開始點餐",
+    "unitPrice": "單價",
+    "subtotal": "小計",
+    "addToCart": "加入購物車",
+    "addedToCart": "已加入購物車",
+    "fastFoodIcon": "快餐圖標",
+    "searchAllProducts": "搜尋全部商品",
+    "searchResults": "搜尋結果: \"{{searchTerm}}\"",
+    "noProductsFound": "沒有找到相關商品",
+    "quantity": "數量",
+    "total": "合計",
+    "confirmOrder": "確認訂單",
+    "placeOrder": "下單",
+    "orderConfirmed": "訂單已確認",
+    "thankYou": "感謝您的訂購",
+    "backToMenu": "返回",
+    "typeMessage": "輸入訊息",
+    "send": "發送",
+    "cart": "購物車",
+    "back": "返回",
+    "emptyCart": "購物車是空的",
+    "productName": "商品名稱",
+    "submitOrder": "提交訂單",
+    "footerText": "©2024 財團法人農漁會南區資訊中心雲端行動點餐系統"
+  }
+}

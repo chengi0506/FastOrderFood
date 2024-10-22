@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MenuItem from './MenuItem';
 import Cart from './Cart';
+import LanguageSelector from './LanguageSelector';
 import fastIcon from '../assets/logo.png';
 import { API_ENDPOINTS } from '../api/endpoints';
+import { useTranslation } from 'react-i18next';
 
 function MenuPage({ cart, addToCart, onError }) {
   const [allMenuItems, setAllMenuItems] = useState([]);
@@ -10,6 +12,8 @@ function MenuPage({ cart, addToCart, onError }) {
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const { t } = useTranslation();
+  const headerRef = useRef(null);
 
   useEffect(() => {
     fetchCategories();
@@ -24,6 +28,24 @@ function MenuPage({ cart, addToCart, onError }) {
   useEffect(() => {
     filterItems();
   }, [searchTerm, activeCategory, allMenuItems]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (headerRef.current) {
+        if (window.scrollY > 0) {
+          headerRef.current.classList.add('scrolled');
+        } else {
+          headerRef.current.classList.remove('scrolled');
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const fetchCategories = async () => {
     try {
@@ -95,9 +117,15 @@ function MenuPage({ cart, addToCart, onError }) {
 
   return (
     <div className="menu-page">
-      <header className="top-nav sticky-header">
+      <header ref={headerRef} className="top-nav sticky-header">
         <div className="header-content">
-          <img src={fastIcon} alt="Fast Food Icon" className="header-icon" />
+          <div className="placeholder"></div>
+          <div className="logo-container">
+            <img src={fastIcon} alt={t('fastFoodIcon')} className="header-icon" />
+          </div>
+          <div className="language-selector-container">
+            <LanguageSelector />
+          </div>
         </div>
         <div className="categories-container">
           <nav className="categories-nav">
@@ -117,7 +145,7 @@ function MenuPage({ cart, addToCart, onError }) {
         <div className="search-bar">
           <input 
             type="text" 
-            placeholder="搜尋全部商品" 
+            placeholder={t('searchAllProducts')} 
             value={searchTerm}
             onChange={handleSearch}
           />
@@ -125,14 +153,14 @@ function MenuPage({ cart, addToCart, onError }) {
       </header>
       <div className="menu-content">
         <h2 className="category-title">
-          {searchTerm ? `搜尋結果: "${searchTerm}"` : categories.find(c => c.prodClass3Id === activeCategory)?.prodClass3Name}
+          {searchTerm ? t('searchResults', { searchTerm }) : categories.find(c => c.prodClass3Id === activeCategory)?.prodClass3Name}
         </h2>
         <div className="menu-items">
           {displayedItems.map(item => (
             <MenuItem key={item.id} item={item} addToCart={addToCart} />
           ))}
         </div>
-        {displayedItems.length === 0 && <p className="no-results">沒有找到相關商品</p>}
+        {displayedItems.length === 0 && <p className="no-results">{t('noProductsFound')}</p>}
       </div>
       <Cart items={cart} />
     </div>

@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
+import '../styles/WelcomePage.css';
 
 function WelcomePage() {
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleTouchStart = (e) => {
     setIsDragging(true);
@@ -35,8 +39,9 @@ function WelcomePage() {
       onTouchEnd={handleTouchEnd}
     >
       <div className="welcome-content">
-        <h1>歡迎使用點餐系統</h1>
-        <p>向上滑動開始點餐</p>
+        <h1>{t('welcomeTitle')}</h1>
+        <LanguageSelector />
+        <p>{t('swipeUpToOrder')}</p>
         <div className="arrow-up" onClick={navigateToMenu}></div>
       </div>
     </div>

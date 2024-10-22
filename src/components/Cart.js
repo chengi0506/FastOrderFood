@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function Cart({ items }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -14,9 +16,9 @@ function Cart({ items }) {
           <span className="item-count">{totalQuantity}</span>
         </div>
         <div className="cart-summary">
-          <p>數量: {totalQuantity}</p>
-          <p>合計: ${total}</p>
-          <button>確認訂單</button>
+          <p>{t('quantity')}: {totalQuantity}</p>
+          <p>{t('total')}: ${total}</p>
+          <button>{t('confirmOrder')}</button>
         </div>
       </div>
     </div>
