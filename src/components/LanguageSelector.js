@@ -12,7 +12,7 @@ function LanguageSelector() {
   return (
     <div className="language-selector">
       <select onChange={changeLanguage} value={i18n.language}>
-        <option value="zh">中文</option>
+        <option value="zh">繁體中文</option>
         <option value="en">English</option>
       </select>
     </div>

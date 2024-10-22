@@ -83,6 +83,7 @@ function App() {
               items={cart} 
               removeFromCart={removeFromCart} 
               updateCartItemQuantity={updateCartItemQuantity}
+              clearCart={clearCart}
             />
           } />
           <Route path="/confirm-order" element={

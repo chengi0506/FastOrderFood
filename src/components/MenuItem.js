@@ -38,10 +38,10 @@ function MenuItem({ item, addToCart }) {
 
   return (
     <div className="menu-item">
-      <h3>{item.name}</h3>
-      <p>{t('unitPrice')}: ${item.price}</p>
-      <p>{t('subtotal')}: ${subtotal}</p>
-      <div className="quantity-control">
+      <h2>{item.name}</h2>
+      <h3>${item.price}</h3>
+{/*       <h3>{t('subtotal')}: ${subtotal}</h3>
+ */}      <div className="quantity-control">
         <button onClick={decreaseQuantity}>-</button>
         <span>{quantity}</span>
         <button onClick={increaseQuantity}>+</button>
