@@ -145,7 +145,7 @@ body {
 
 .menu-items {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
   padding: 20px;
 }
@@ -221,7 +221,7 @@ body {
   cursor: pointer;
   transition: background-color 0.3s;
   width: 100%;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .add-to-cart:hover {
@@ -671,4 +671,35 @@ body, html {
   }
 }
 
-/* ... 保持其他樣式不變 ... */
+.add-to-cart {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #026EB7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.quantity-badge, .subtotal-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  border-radius: 12px;
+  font-size: 0.9em;
+}
+
+.quantity-badge {
+  margin-right: 8px;
+}
+
+.subtotal-badge {
+  margin-left: 8px;
+}

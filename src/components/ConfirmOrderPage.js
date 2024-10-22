@@ -80,6 +80,7 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
     <div className="confirm-order-page">
       <button className="back-button" onClick={() => navigate('/cart')}>{t('back')}</button>
       <h2 className="page-title">{t('confirmOrder.title')}</h2>
+    
       <div className="order-summary">
         <h3>{t('confirmOrder.orderSummary')}</h3>
         <div className="order-items">

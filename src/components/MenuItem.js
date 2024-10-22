@@ -46,7 +46,11 @@ function MenuItem({ item, addToCart }) {
         <span>{quantity}</span>
         <button onClick={increaseQuantity}>+</button>
       </div>
-      <button className="add-to-cart" onClick={handleAddToCart}>{t('addToCart')}</button>
+      <button className="add-to-cart" onClick={handleAddToCart}>
+        <span className="quantity-badge">{quantity}</span>
+        {t('addToCart')}
+        <span className="subtotal-badge">${subtotal}</span>
+      </button>
     </div>
   );
 }
