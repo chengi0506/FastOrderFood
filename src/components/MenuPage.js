@@ -142,6 +142,17 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
     }
   };
 
+  // 新增一個函數來檢查商品是否在購物車中
+  const isItemInCart = (itemId) => {
+    return cart.some(cartItem => cartItem.id === itemId);
+  };
+
+  // 修改這個函數來返回購物車中該商品的數量
+  const getCartItemQuantity = (itemId) => {
+    const cartItem = cart.find(item => item.id === itemId);
+    return cartItem ? cartItem.quantity : 0;
+  };
+
   return (
     <div className="menu-page">
       <header ref={headerRef} className="top-nav sticky-header">
@@ -204,7 +215,13 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
         </h2>
         <div className="menu-items">
           {displayedItems.map(item => (
-            <MenuItem key={item.id} item={item} addToCart={addToCart} />
+            <MenuItem 
+              key={item.id} 
+              item={item} 
+              addToCart={addToCart} 
+              isInCart={isItemInCart(item.id)}
+              cartQuantity={getCartItemQuantity(item.id)}
+            />
           ))}
         </div>
         {displayedItems.length === 0 && <p className="no-results">{t('noProductsFound')}</p>}

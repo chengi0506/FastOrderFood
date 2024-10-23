@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { useTranslation } from 'react-i18next';
 
-function MenuItem({ item, addToCart }) {
+function MenuItem({ item, addToCart, isInCart, cartQuantity }) {
   const [quantity, setQuantity] = useState(1);
   const [subtotal, setSubtotal] = useState(item.price);
   const { t } = useTranslation();
@@ -31,17 +31,21 @@ function MenuItem({ item, addToCart }) {
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 3000,
+      timer: 1000,
       timerProgressBar: true,
     });
   };
 
   return (
     <div className="menu-item">
+      {isInCart && (
+        <div className="cart-quantity-badge">
+          {cartQuantity}
+        </div>
+      )}
       <h2>{item.name}</h2>
       <h3>${item.price}</h3>
-{/*       <h3>{t('subtotal')}: ${subtotal}</h3>
- */}      <div className="quantity-control">
+      <div className="quantity-control">
         <button onClick={decreaseQuantity}>-</button>
         <span>{quantity}</span>
         <button onClick={increaseQuantity}>+</button>
