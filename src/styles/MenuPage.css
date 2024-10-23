@@ -747,12 +747,22 @@ body, html {
   width: 100%;
 }
 
+.order-total-and-pickup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 20px;
+}
 
+.order-total {
+  font-size: 1.2em;
+  text-align: right;
+}
 
+.pickup-time {
+  font-size: 1.2em;
+  text-align: right;
+}
 
-
-
-
-
-
-
+/* ... 其他樣式保持不變 ... */

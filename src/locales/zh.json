@@ -33,7 +33,8 @@
       "carrier": "手機載具",
       "note": "備註",
       "confirmOrder": "確認訂單",
-      "submitOrder": "送出訂單"
+      "submitOrder": "送出訂單",
+      "pickupTime": "自取時間"
     },
     "orderStatus": {
       "pending": "待處理"
@@ -51,10 +52,14 @@
     "pickupTime": "自取",
     "time": "時間",
     "selectTime": "請選擇時間",
-    "asap": "現在",
-    "in15Minutes": "15分鐘後",
-    "in30Minutes": "30分鐘後",
-    "in45Minutes": "45分鐘後",
-    "in60Minutes": "60分鐘後"
+    "orderConfirmationPage": {
+      "title": "訂單確認",
+      "thankYou": "感謝您的訂購！",
+      "orderTime": "訂單時間",
+      "orderNumber": "訂單編號",
+      "confirmationMessage": "您的訂單已成功提交。我們將盡快處理您的訂單。",
+      "continueShopping": "繼續購物",
+      "backToHome": "返回首頁"
+    }
   }
 }

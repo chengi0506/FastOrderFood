@@ -6,7 +6,7 @@ import fastIcon from '../assets/logo.png';
 import { API_ENDPOINTS } from '../api/endpoints';
 import { useTranslation } from 'react-i18next';
 
-function MenuPage({ cart, addToCart, onError }) {
+function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
   const [allMenuItems, setAllMenuItems] = useState([]);
   const [displayedItems, setDisplayedItems] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -14,10 +14,12 @@ function MenuPage({ cart, addToCart, onError }) {
   const [searchTerm, setSearchTerm] = useState('');
   const { t } = useTranslation();
   const headerRef = useRef(null);
+  const [pickupTimes, setPickupTimes] = useState([]);
   const [pickupTime, setPickupTime] = useState('');
 
   useEffect(() => {
     fetchCategories();
+    generatePickupTimes();
   }, []);
 
   useEffect(() => {
@@ -30,8 +32,22 @@ function MenuPage({ cart, addToCart, onError }) {
     filterItems();
   }, [searchTerm, activeCategory, allMenuItems]);
 
+  const generatePickupTimes = () => {
+    const now = new Date();
+    const times = [];
+    for (let i = 0; i < 12; i++) {
+      const time = new Date(now.getTime() + (i + 1) * 10 * 60000);
+      times.push(time.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false }));
+    }
+    setPickupTimes(times);
+    setPickupTime(times[0]); // 設置默認選中時間為第一個選項
+    updatePickupTime(times[0]); // 更新 App 組件中的取餐時間
+  };
+
   const handlePickupTimeChange = (event) => {
-    setPickupTime(event.target.value);
+    const selectedTime = event.target.value;
+    setPickupTime(selectedTime);
+    updatePickupTime(selectedTime);
   };
 
   const fetchCategories = async () => {
@@ -140,11 +156,11 @@ function MenuPage({ cart, addToCart, onError }) {
           </div>
           <div className="pickup-time-selector">
             <select id="pickup-time" value={pickupTime} onChange={handlePickupTimeChange}>
-              <option value="asap">{t('pickupTime')} | {t('asap')}</option>
-              <option value="15min">{t('pickupTime')} | {t('in15Minutes')}</option>
-              <option value="30min">{t('pickupTime')} | {t('in30Minutes')}</option>
-              <option value="45min">{t('pickupTime')} | {t('in45Minutes')}</option>
-              <option value="60min">{t('pickupTime')} | {t('in60Minutes')}</option>
+              {pickupTimes.map((time, index) => (
+                <option key={index} value={time}>
+                  {t('pickupTime')} | {time}
+                </option>
+              ))}
             </select>
           </div>
         </div>

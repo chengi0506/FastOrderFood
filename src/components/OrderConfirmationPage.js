@@ -23,10 +23,10 @@ const OrderConfirmationPage = () => {
           {t('orderConfirmationPage.confirmationMessage')}
         </p>
         <div className="action-buttons">
-          <Link to="/menu" className="button primary-button">
+          <Link to="/menu" className="confirm-order-button">
             {t('orderConfirmationPage.continueShopping')}
           </Link>
-          <Link to="/" className="button secondary-button">
+          <Link to="/" className="confirm-order-button">
             {t('orderConfirmationPage.backToHome')}
           </Link>
         </div>

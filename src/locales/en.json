@@ -1,27 +1,27 @@
 {
   "translation": {
     "language": "Language",
-    "welcomeTitle": "Welcome to the Cloud Mobile Ordering System",
+    "welcomeTitle": "Welcome to Cloud Mobile Ordering System",
     "swipeUpToOrder": "Swipe up or click the arrow to start ordering",
     "unitPrice": "Unit Price",
     "subtotal": "Subtotal",
     "addToCart": "Add to Cart",
     "addedToCart": "Added to Cart",
     "fastFoodIcon": "Fast Food Icon",
-    "searchAllProducts": "Search all products",
+    "searchAllProducts": "Search All Products",
     "searchResults": "Search Results: \"{{searchTerm}}\"",
-    "noProductsFound": "No related products found",
+    "noProductsFound": "No products found",
     "quantity": "Quantity",
     "total": "Total",
     "placeOrder": "Place Order",
     "orderConfirmed": "Order Confirmed",
     "thankYou": "Thank you for your order",
-    "backToMenu": "Back to Menu",
+    "backToMenu": "Back",
     "typeMessage": "Type a message",
     "send": "Send",
-    "cart": "Shopping Cart",
+    "cart": "Cart",
     "back": "Back",
-    "emptyCart": "The shopping cart is empty",
+    "emptyCart": "Cart is empty",
     "productName": "Product Name",
     "footerText": "©2024 Fast Company Cloud Mobile Ordering System.",
     "confirmOrder": {
@@ -32,7 +32,9 @@
       "mobile": "Mobile",
       "carrier": "Mobile Carrier",
       "note": "Note",
-      "submitOrder": "Submit Order"
+      "confirmOrder": "Confirm Order",
+      "submitOrder": "Submit Order",
+      "pickupTime": "Pickup Time"
     },
     "orderStatus": {
       "pending": "Pending"
@@ -45,11 +47,19 @@
       "orderSubmissionFailed": "Order Submission Failed",
       "tryAgainLater": "Please try again later."
     },
-    "pickupDateTime": "Pickup Date and Time",
+    "pickupDateTime": "Pickup Time",
     "pickupDate": "Pickup Date",
-    "pickupTime": "Pick up",
+    "pickupTime": "Self-pickup",
     "time": "Time",
-    "pleaseSelectDateTime": "Please select pickup date and time",
-    "orderSubmitted": "Order submitted"
+    "selectTime": "Please select a time",
+    "orderConfirmationPage": {
+      "title": "Order Confirmation",
+      "thankYou": "Thank you for your order!",
+      "orderTime": "Order Time",
+      "orderNumber": "Order Number",
+      "confirmationMessage": "Your order has been successfully submitted. We will process your order as soon as possible.",
+      "continueShopping": "Continue Shopping",
+      "backToHome": "Back to Home"
+    }
   }
 }

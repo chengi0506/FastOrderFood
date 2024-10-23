@@ -21,6 +21,7 @@ function App() {
     return savedCart ? JSON.parse(savedCart) : [];
   });
   const [error, setError] = useState(null);
+  const [pickupTime, setPickupTime] = useState('');
 
   // 當購物車內容變化時，將其保存到 localStorage
   useEffect(() => {
@@ -66,6 +67,10 @@ function App() {
     setError(error);
   };
 
+  const updatePickupTime = (time) => {
+    setPickupTime(time);
+  };
+
   return (
     <div className="App">
       <main>
@@ -76,6 +81,7 @@ function App() {
               cart={cart} 
               addToCart={addToCart} 
               onError={handleError}
+              updatePickupTime={updatePickupTime}
             />
           } />
           <Route path="/cart" element={
@@ -90,6 +96,7 @@ function App() {
             <ConfirmOrderPage 
               cart={cart}
               clearCart={clearCart}
+              pickupTime={pickupTime}
             />
           } />
           <Route path="/error" element={<ErrorPage error={error} />} />

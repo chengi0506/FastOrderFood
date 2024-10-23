@@ -4,13 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { API_ENDPOINTS } from '../api/endpoints';
 import Swal from 'sweetalert2';
 
-const ConfirmOrderPage = ({ cart, clearCart }) => {
+const ConfirmOrderPage = ({ cart, clearCart, pickupTime }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [carrier, setCarrier] = useState('');
   const [note, setNote] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); //提交狀態
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -20,10 +21,11 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
     const order = {
       Amt: Math.round(total),
       Name: name,
-      Mobile: mobile.replace(/\D/g, ''),
+      Mobile: mobile.replace(/\D/g, ''), // 保持為字符串，只移除非數字字符
       Carrier: carrier.slice(0, 8),
       Note: note.slice(0, 100),
       State: t('orderStatus.pending'),
+      PickupTime: pickupTime,
       OrderDetail: cart.map(item => ({
         ProdId: item.id,
         ProdName: item.name,
@@ -33,6 +35,9 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
     };
   
     try {
+  // 鎖定按鈕，防止重複提交
+  setIsSubmitting(true);
+
       const response = await fetch(API_ENDPOINTS.CHECKOUT, {
         method: 'POST',
         headers: {
@@ -42,7 +47,7 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
       });
   
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.text();
         console.error('Error Response:', errorData);
         throw new Error(t('errors.orderSubmissionFailed'));
       }
@@ -73,6 +78,9 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
         title: t('errors.orderSubmissionFailed'),
         text: t('errors.tryAgainLater'),
       });
+    }finally {
+      // 解除鎖定
+      setIsSubmitting(false);
     }
   };
 
@@ -92,8 +100,15 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
             </div>
           ))}
         </div>
-        <div className="order-total">
-          <strong>{t('confirmOrder.total')}：</strong> <span className="total-price">${total}</span>
+        <div className="order-total-and-pickup">
+          <span className="pickup-time">
+            <strong>{t('pickupTime')}：</strong>
+            <span className="total-price">{pickupTime || t('notSelected')}</span>
+          </span>
+          <span className="order-total">
+            <strong>{t('confirmOrder.total')}：</strong>
+            <span className="total-price">${total}</span>
+          </span>
         </div>
       </div>
       <form onSubmit={handleSubmitOrder} className="order-form">
@@ -134,7 +149,10 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
             onChange={(e) => setNote(e.target.value)}
           ></textarea>
         </div>
-        <button type="submit" className="confirm-order-button">{t('confirmOrder.submitOrder')}</button>
+        <button type="submit" className="confirm-order-button" disabled={isSubmitting}>
+          <i className="fas fa-pencil-alt mr-1"></i>
+            {isSubmitting ? "訂單處理中..." : t('confirmOrder.submitOrder')}
+        </button>
       </form>
     </div>
   );
