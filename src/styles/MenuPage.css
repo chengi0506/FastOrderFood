@@ -441,7 +441,7 @@ body {
   right: 0;
   z-index: 1000;
   background-color: #fff;
-  transition: box-shadow 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .sticky-header.scrolled {
@@ -449,7 +449,7 @@ body {
 }
 
 .menu-content {
-  padding-top: 180px; /* 調整這個值以匹配你的header高度 */
+  padding-top: 220px; /* 調整這個值以匹配你的header高度 */
 }
 
 .top-nav {
@@ -708,3 +708,51 @@ body, html {
 .subtotal-badge {
   margin-left: 8px;
 }
+
+.pickup-time-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.pickup-time-selector label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.pickup-time-selector select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.search-and-pickup-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.search-bar,
+.pickup-time-selector {
+  flex: 1;
+  max-width: 48%;
+}
+
+.search-bar input,
+.pickup-time-selector select {
+  width: 100%;
+}
+
+
+
+
+
+
+
+
+
+

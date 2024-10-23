@@ -45,6 +45,16 @@
     "errors": {
       "orderSubmissionFailed": "訂單提交失敗",
       "tryAgainLater": "請稍後再試。"
-    }
+    },
+    "pickupDateTime": "取餐時間",
+    "pickupDate": "取餐日期",
+    "pickupTime": "自取",
+    "time": "時間",
+    "selectTime": "請選擇時間",
+    "asap": "現在",
+    "in15Minutes": "15分鐘後",
+    "in30Minutes": "30分鐘後",
+    "in45Minutes": "45分鐘後",
+    "in60Minutes": "60分鐘後"
   }
 }

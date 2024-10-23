@@ -44,6 +44,12 @@
     "errors": {
       "orderSubmissionFailed": "Order Submission Failed",
       "tryAgainLater": "Please try again later."
-    }
+    },
+    "pickupDateTime": "Pickup Date and Time",
+    "pickupDate": "Pickup Date",
+    "pickupTime": "Pick up",
+    "time": "Time",
+    "pleaseSelectDateTime": "Please select pickup date and time",
+    "orderSubmitted": "Order submitted"
   }
 }

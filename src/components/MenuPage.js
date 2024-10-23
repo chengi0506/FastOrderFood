@@ -14,6 +14,7 @@ function MenuPage({ cart, addToCart, onError }) {
   const [searchTerm, setSearchTerm] = useState('');
   const { t } = useTranslation();
   const headerRef = useRef(null);
+  const [pickupTime, setPickupTime] = useState('');
 
   useEffect(() => {
     fetchCategories();
@@ -29,23 +30,9 @@ function MenuPage({ cart, addToCart, onError }) {
     filterItems();
   }, [searchTerm, activeCategory, allMenuItems]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (headerRef.current) {
-        if (window.scrollY > 0) {
-          headerRef.current.classList.add('scrolled');
-        } else {
-          headerRef.current.classList.remove('scrolled');
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  const handlePickupTimeChange = (event) => {
+    setPickupTime(event.target.value);
+  };
 
   const fetchCategories = async () => {
     try {
@@ -142,13 +129,24 @@ function MenuPage({ cart, addToCart, onError }) {
             </ul>
           </nav>
         </div>
-        <div className="search-bar">
-          <input 
-            type="text" 
-            placeholder={t('searchAllProducts')} 
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+        <div className="search-and-pickup-container">
+          <div className="search-bar">
+            <input 
+              type="text" 
+              placeholder={t('searchAllProducts')} 
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </div>
+          <div className="pickup-time-selector">
+            <select id="pickup-time" value={pickupTime} onChange={handlePickupTimeChange}>
+              <option value="asap">{t('pickupTime')} | {t('asap')}</option>
+              <option value="15min">{t('pickupTime')} | {t('in15Minutes')}</option>
+              <option value="30min">{t('pickupTime')} | {t('in30Minutes')}</option>
+              <option value="45min">{t('pickupTime')} | {t('in45Minutes')}</option>
+              <option value="60min">{t('pickupTime')} | {t('in60Minutes')}</option>
+            </select>
+          </div>
         </div>
       </header>
       <div className="menu-content">
