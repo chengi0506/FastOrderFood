@@ -26,7 +26,7 @@ const OrderConfirmationPage = () => {
           <Link to="/menu" className="confirm-order-button">
             {t('orderConfirmationPage.continueShopping')}
           </Link>
-          <Link to="/" className="confirm-order-button">
+          <Link to="/" className="button secondary-button">
             {t('orderConfirmationPage.backToHome')}
           </Link>
         </div>

@@ -60,6 +60,9 @@
       "confirmationMessage": "您的訂單已成功提交。我們將盡快處理您的訂單。",
       "continueShopping": "繼續購物",
       "backToHome": "返回首頁"
-    }
+    },
+    "address": "地址",
+    "phone": "電話",
+    "businessHours": "營業時間"
   }
 }

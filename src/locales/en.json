@@ -60,6 +60,9 @@
       "confirmationMessage": "Your order has been successfully submitted. We will process your order as soon as possible.",
       "continueShopping": "Continue Shopping",
       "backToHome": "Back to Home"
-    }
+    },
+    "address": "Address",
+    "phone": "Phone",
+    "businessHours": "Business Hours"
   }
 }

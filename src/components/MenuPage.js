@@ -16,10 +16,12 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
   const headerRef = useRef(null);
   const [pickupTimes, setPickupTimes] = useState([]);
   const [pickupTime, setPickupTime] = useState('');
+  const [storeInfo, setStoreInfo] = useState(null);
 
   useEffect(() => {
     fetchCategories();
     generatePickupTimes();
+    fetchStoreInfo();
   }, []);
 
   useEffect(() => {
@@ -125,14 +127,38 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
     setActiveCategory('');
   };
 
+  const fetchStoreInfo = async () => {
+    try {
+      const response = await fetch(API_ENDPOINTS.GET_STORE_INFO);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log('Fetched store info:', data); // 添加這行來記錄獲取的商店信息
+      setStoreInfo(data[0]);
+    } catch (error) {
+      console.error('Error fetching store info:', error);
+      onError(error);
+    }
+  };
+
   return (
     <div className="menu-page">
       <header ref={headerRef} className="top-nav sticky-header">
         <div className="header-content">
-          <div className="logo-container">
+          <div className="logo-and-store-info">
             <img src={fastIcon} alt={t('fastFoodIcon')} className="header-icon" />
+            {storeInfo && (
+              <div className="store-info">
+                <h2>{storeInfo.storeName}</h2>
+                <div className="store-details">
+                  <p>{t('address')}: {storeInfo.storeAddress}</p>
+                  <p>{t('phone')}: {storeInfo.storeContactTel}</p>
+                  <p>{t('businessHours')}: {storeInfo.storeBusinessHours}</p>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="placeholder"><strong>VASO弘肉燥飯舖</strong></div>
           <div className="language-selector-container">
             <LanguageSelector />
           </div>

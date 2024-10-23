@@ -6,4 +6,5 @@ export const API_ENDPOINTS = {
   GET_PROD_CLASS: `${BASE_URL}/Prod/GetProdClass`,
   GET_PRODUCTS_BY_CLASS: (prodClass) => `${BASE_URL}/Prod/GetProductsByClass/${prodClass}`,
   CHECKOUT: `${BASE_URL}/Order/Checkout`,
+  GET_STORE_INFO : `${BASE_URL}/Store/GetStoreInfo`,
 };

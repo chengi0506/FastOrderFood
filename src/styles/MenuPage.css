@@ -56,28 +56,52 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 10px;
+  padding: 10px;
 }
 
-.language-selector-container {
-  flex: 1;
+.logo-and-store-info {
   display: flex;
-  justify-content: flex-end;
-}
-
-.logo-container {
-  flex: 1;
-  display: flex;
-  justify-content: left;
-}
-
-.placeholder {
+  align-items: center;
   flex: 1;
 }
 
 .header-icon {
   width: 40px;
   height: 40px;
+  margin-right: 10px;
+}
+
+.store-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.store-info h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.store-details {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.store-details p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.language-selector-container {
+  margin-left: 20px;
+}
+
+.placeholder {
+  flex: 1;
 }
 
 .header-title {
@@ -766,3 +790,4 @@ body, html {
 }
 
 /* ... 其他樣式保持不變 ... */
+
