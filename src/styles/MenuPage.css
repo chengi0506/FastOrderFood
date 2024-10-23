@@ -68,7 +68,7 @@ body {
 .logo-container {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: left;
 }
 
 .placeholder {

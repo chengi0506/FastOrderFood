@@ -37,7 +37,14 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
     const times = [];
     for (let i = 0; i < 12; i++) {
       const time = new Date(now.getTime() + (i + 1) * 10 * 60000);
-      times.push(time.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false }));
+      const formattedTime = time.toLocaleString('zh-TW', {
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+      times.push(formattedTime);
     }
     setPickupTimes(times);
     setPickupTime(times[0]); // 設置默認選中時間為第一個選項
@@ -122,10 +129,10 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
     <div className="menu-page">
       <header ref={headerRef} className="top-nav sticky-header">
         <div className="header-content">
-          <div className="placeholder"></div>
           <div className="logo-container">
             <img src={fastIcon} alt={t('fastFoodIcon')} className="header-icon" />
           </div>
+          <div className="placeholder"><strong>VASO弘肉燥飯舖</strong></div>
           <div className="language-selector-container">
             <LanguageSelector />
           </div>

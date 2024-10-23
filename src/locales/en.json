@@ -49,7 +49,7 @@
     },
     "pickupDateTime": "Pickup Time",
     "pickupDate": "Pickup Date",
-    "pickupTime": "Self-pickup",
+    "pickupTime": "pickup",
     "time": "Time",
     "selectTime": "Please select a time",
     "orderConfirmationPage": {
