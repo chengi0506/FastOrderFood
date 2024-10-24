@@ -40,6 +40,7 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
     for (let i = 0; i < 12; i++) {
       const time = new Date(now.getTime() + (i + 1) * 10 * 60000);
       const formattedTime = time.toLocaleString('zh-TW', {
+        year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',

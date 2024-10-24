@@ -20,8 +20,8 @@ function MenuItem({ item, addToCart, isInCart, cartQuantity }) {
   };
 
   const handleAddToCart = () => {
-    addToCart({ ...item, quantity });
-    setQuantity(1); // 重置數量為1
+    const currentQuantity = isInCart ? cartQuantity + quantity : quantity;
+    addToCart({ ...item, quantity: currentQuantity });
     
     // 顯示 SweetAlert2 toast 通知
     Swal.fire({
@@ -34,6 +34,8 @@ function MenuItem({ item, addToCart, isInCart, cartQuantity }) {
       timer: 1000,
       timerProgressBar: true,
     });
+
+    setQuantity(1); // 重置數量為1
   };
 
   return (

@@ -258,6 +258,7 @@ body {
   bottom: 60px;
   right: 20px;
   z-index: 1000;
+  animation: bounce 2s infinite;
 }
 
 .cart {
@@ -475,6 +476,18 @@ body {
 
 .menu-content {
   padding-top: 220px; /* 調整這個值以匹配你的header高度 */
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
 }
 
 .top-nav {

@@ -32,16 +32,21 @@ function App() {
     setCart(prevCart => {
       const existingItemIndex = prevCart.findIndex(cartItem => cartItem.id === item.id);
       if (existingItemIndex !== -1) {
-        // 如果商品已經在購物車中，更新數量
+        // 如果商品已經在購物車中，替換數量而不是增加
         const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex].quantity += item.quantity;
+        //console.log('現有數量:', updatedCart[existingItemIndex].quantity);
+        //console.log('新增數量:', item.quantity);
+        updatedCart[existingItemIndex].quantity = item.quantity;
+        //console.log('更新後數量:', updatedCart[existingItemIndex].quantity);
         return updatedCart;
       } else {
         // 如果是新商品，直接添加到購物車
+        //console.log('新增商品數量:', item.quantity);
         return [...prevCart, item];
       }
     });
   };
+  
 
   const removeFromCart = (index) => {
     setCart(prevCart => {
