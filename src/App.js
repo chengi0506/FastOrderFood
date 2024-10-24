@@ -21,12 +21,20 @@ function App() {
     return savedCart ? JSON.parse(savedCart) : [];
   });
   const [error, setError] = useState(null);
-  const [pickupTime, setPickupTime] = useState('');
+  const [pickupTime, setPickupTime] = useState(() => {
+    // 從 localStorage 中讀取取餐時間
+    return localStorage.getItem('pickupTime') || '';
+  });
 
   // 當購物車內容變化時，將其保存到 localStorage
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
+
+  // 當取餐時間變化時，將其保存到 localStorage
+  useEffect(() => {
+    localStorage.setItem('pickupTime', pickupTime);
+  }, [pickupTime]);
 
   const addToCart = (item) => {
     setCart(prevCart => {
@@ -66,6 +74,9 @@ function App() {
 
   const clearCart = () => {
     setCart([]);
+    // 清空購物車時也清除取餐時間
+    setPickupTime('');
+    localStorage.removeItem('pickupTime');
   };
 
   const handleError = (error) => {
@@ -87,6 +98,7 @@ function App() {
               addToCart={addToCart} 
               onError={handleError}
               updatePickupTime={updatePickupTime}
+              pickupTime={pickupTime}
             />
           } />
           <Route path="/cart" element={
@@ -102,6 +114,7 @@ function App() {
               cart={cart}
               clearCart={clearCart}
               pickupTime={pickupTime}
+              updatePickupTime={updatePickupTime}
             />
           } />
           <Route path="/error" element={<ErrorPage error={error} />} />

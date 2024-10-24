@@ -34,7 +34,8 @@
       "note": "備註",
       "confirmOrder": "確認訂單",
       "submitOrder": "送出訂單",
-      "pickupTime": "自取時間"
+      "pickupTime": "自取時間",
+      "processing": "訂單處理中..."
     },
     "orderStatus": {
       "pending": "待處理"
@@ -45,11 +46,16 @@
     },
     "errors": {
       "orderSubmissionFailed": "訂單提交失敗",
-      "tryAgainLater": "請稍後再試。"
+      "tryAgainLater": "請稍後再試。",
+      "invalidCarrier": "手機載具輸入錯誤",
+      "pleaseCheckCarrier": "請檢查手機載具格式是否正確",
+      "invalidMobile": "手機號碼輸入錯誤",
+      "pleaseEnter10Digits": "請輸入十位數字"
     },
     "pickupDateTime": "取餐時間",
     "pickupDate": "取餐日期",
     "pickupTime": "自取",
+    "notSelected": "未選擇",
     "time": "時間",
     "selectTime": "請選擇時間",
     "orderConfirmationPage": {

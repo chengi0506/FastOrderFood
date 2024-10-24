@@ -16,14 +16,14 @@ const OrderConfirmationPage = () => {
         <h2>{t('orderConfirmationPage.title')}</h2>
         <p className="thank-you-message">{t('orderConfirmationPage.thankYou')}</p>
         <div className="order-details">
-          <p><strong>{t('orderConfirmationPage.orderTime')}:</strong> {orderTime}</p>
-          <p><strong>{t('orderConfirmationPage.orderNumber')}:</strong> {orderNumber}</p>
+          <p><strong>{t('orderConfirmationPage.orderTime')}:</strong> <span className="highlight-text">{orderTime}</span></p>
+          <p><strong>{t('orderConfirmationPage.orderNumber')}:</strong> <span className="highlight-text">{orderNumber}</span></p>
         </div>
         <p className="confirmation-message">
           {t('orderConfirmationPage.confirmationMessage')}
         </p>
         <div className="action-buttons">
-          <Link to="/menu" className="confirm-order-button">
+          <Link to="/menu" className="button primary-button">
             {t('orderConfirmationPage.continueShopping')}
           </Link>
           <Link to="/" className="button secondary-button">

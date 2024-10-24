@@ -34,7 +34,8 @@
       "note": "Note",
       "confirmOrder": "Confirm Order",
       "submitOrder": "Submit Order",
-      "pickupTime": "Pickup Time"
+      "pickupTime": "Pickup Time",
+      "processing": "Processing order..."
     },
     "orderStatus": {
       "pending": "Pending"
@@ -45,11 +46,16 @@
     },
     "errors": {
       "orderSubmissionFailed": "Order Submission Failed",
-      "tryAgainLater": "Please try again later."
+      "tryAgainLater": "Please try again later.",
+      "invalidCarrier": "Invalid mobile carrier input",
+      "pleaseCheckCarrier": "Please check if the mobile carrier format is correct",
+      "invalidMobile": "Invalid mobile number input",
+      "pleaseEnter10Digits": "Please enter 10 digits"
     },
     "pickupDateTime": "Pickup Time",
     "pickupDate": "Pickup Date",
     "pickupTime": "pickup",
+    "notSelected": "Not Selected",
     "time": "Time",
     "selectTime": "Please select a time",
     "orderConfirmationPage": {

@@ -51,16 +51,18 @@ h2 {
 
 .action-buttons {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   gap: 1rem;
 }
 
 .button {
+  flex: 1;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.3s;
+  text-align: center;
 }
 
 .primary-button {
@@ -79,4 +81,15 @@ h2 {
 
 .secondary-button:hover {
   background-color: #e0e0e0;
+}
+
+@media (max-width: 480px) {
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+.highlight-text {
+  color: #ff0000;
+  font-weight: bold;
 }

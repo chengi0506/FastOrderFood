@@ -411,12 +411,6 @@ body {
   border-top: 2px solid #eee;
 }
 
-.total-price {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #ff3333;
-}
-
 .checkout-button {
   background-color: #026EB7;
   color: white;
@@ -473,7 +467,7 @@ body {
 }
 
 .menu-content {
-  padding-top: 220px; /* 調整這個值以匹配你的header高度 */
+  padding-top: 220px; /* 調��個值以匹配你的header高度 */
 }
 
 @keyframes bounce {
@@ -568,11 +562,6 @@ body {
   text-align: right;
 }
 
-.order-total {
-  font-size: 1.2em;
-  text-align: right;
-}
-
 .total-price {
   font-size: 1.2em;
   font-weight: bold;
@@ -580,7 +569,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  text-align: right;
+  text-align: left;
 }
 
 .order-form {
@@ -785,20 +774,34 @@ body, html {
 
 .order-total-and-pickup {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   margin-top: 20px;
   padding-top: 20px;
+  border-top: 1px solid #eee;
 }
 
-.order-total {
-  font-size: 1.2em;
+.pickup-time, .order-total {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 1.3em;
+  text-align: left;
+}
+
+.pickup-time strong, .order-total strong {
+  flex: 0 0 auto;
+  margin-right: 10px;
+}
+
+.pickup-time span, .order-total span {
+  flex: 1;
   text-align: right;
 }
 
-.pickup-time {
-  font-size: 1.2em;
-  text-align: right;
+@media (max-width: 768px) {
+  .pickup-time, .order-total {
+    flex-direction: row;
+  }
 }
 
 /* ... 其他樣式保持不變 ... */
@@ -868,4 +871,6 @@ body, html {
     margin: 10px 0; /* 減少上下邊距 */
     padding-top: 10px; /* 減少頂部內邊距 */
   }
+
 }
+
