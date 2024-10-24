@@ -55,13 +55,13 @@ body {
 .header-content {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px;
+  align-items: flex-start;
+  padding: 5px;
 }
 
 .logo-and-store-info {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
 }
 
@@ -73,21 +73,18 @@ body {
 
 .store-info {
   display: flex;
-  align-items: center;
-  flex: 1;
+  flex-direction: column;
 }
 
 .store-info h2 {
   margin: 0;
   font-size: 18px;
   color: #333;
-  white-space: nowrap;
 }
 
 .store-details {
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
 }
 
 .store-details p {
@@ -165,6 +162,7 @@ body {
 .category-title {
   text-align: center;
   margin: 20px 0;
+  padding-top: 20px; /* 添加頂部內邊距 */
 }
 
 .menu-items {
@@ -827,4 +825,47 @@ body, html {
   align-items: center;
   font-size: 14px;
   font-weight: bold;
+}
+
+/* 媒體查詢：針對手機視圖 */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .logo-and-store-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .store-info {
+    margin-left: 0;
+    margin-top: 10px;
+    text-align: left;
+  }
+
+  .store-details {
+    margin-top: 5px;
+  }
+
+  .header-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .language-selector-container {
+    margin-top: 0;
+    align-self: flex-start;
+  }
+
+  .menu-content {
+    padding-top: 280px; /* 增加頂部內邊距，為手機視圖提供更多空間 */
+  }
+
+  .category-title {
+    font-size: 1.5em; /* 減小字體大小 */
+    margin: 10px 0; /* 減少上下邊距 */
+    padding-top: 10px; /* 減少頂部內邊距 */
+  }
 }
