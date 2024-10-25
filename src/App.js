@@ -12,6 +12,7 @@ import './styles/MenuPage.css';
 import './styles/App.css';
 import { useTranslation } from 'react-i18next';
 import './i18n';
+import { API_ENDPOINTS } from './api/endpoints';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -25,6 +26,7 @@ function App() {
     // 從 localStorage 中讀取取餐時間
     return localStorage.getItem('pickupTime') || '';
   });
+  const [storeInfo, setStoreInfo] = useState(null);
 
   // 當購物車內容變化時，將其保存到 localStorage
   useEffect(() => {
@@ -35,6 +37,24 @@ function App() {
   useEffect(() => {
     localStorage.setItem('pickupTime', pickupTime);
   }, [pickupTime]);
+
+  useEffect(() => {
+    fetchStoreInfo();
+  }, []);
+
+  const fetchStoreInfo = async () => {
+    try {
+      const response = await fetch(API_ENDPOINTS.GET_STORE_INFO);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setStoreInfo(data[0]);
+    } catch (error) {
+      console.error('Error fetching store info:', error);
+      handleError(error);
+    }
+  };
 
   const addToCart = (item) => {
     setCart(prevCart => {
@@ -107,6 +127,7 @@ function App() {
               removeFromCart={removeFromCart} 
               updateCartItemQuantity={updateCartItemQuantity}
               clearCart={clearCart}
+              pickupTime={pickupTime}
             />
           } />
           <Route path="/confirm-order" element={
@@ -120,7 +141,7 @@ function App() {
           <Route path="/error" element={<ErrorPage error={error} />} />
           <Route 
             path="/order-confirmation" 
-            element={<OrderConfirmationPage />} 
+            element={<OrderConfirmationPage storeInfo={storeInfo} />} 
           />
         </Routes>
       </main>

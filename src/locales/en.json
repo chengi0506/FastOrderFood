@@ -65,7 +65,8 @@
       "orderNumber": "Order Number",
       "confirmationMessage": "Your order has been successfully submitted. We will process your order as soon as possible.",
       "continueShopping": "Continue Shopping",
-      "backToHome": "Back to Home"
+      "backToHome": "Back to Home",
+      "downloadScreenshot": "SaveOrder"
     },
     "address": "Address",
     "phone": "Phone",

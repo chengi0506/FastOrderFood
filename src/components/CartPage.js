@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-function CartPage({ items, removeFromCart, updateCartItemQuantity }) {
+function CartPage({ items, removeFromCart, updateCartItemQuantity, pickupTime }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -15,10 +15,14 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity }) {
     }
   };
 
+  const handleConfirmOrder = () => {
+    navigate('/confirm-order', { state: { pickupTime } });
+  };
+
   return (
     <div className="cart-page">
-        <button className="back-button" onClick={() => navigate('/menu')}>{t('back')}</button>
-        <h2 className="page-title">{t('cart')}</h2>
+      <button className="back-button" onClick={() => navigate('/menu')}>{t('back')}</button>
+      <h2 className="page-title">{t('cart')}</h2>
       {items.length === 0 ? (
         <p className="empty-cart">{t('emptyCart')}</p>
       ) : (
@@ -42,12 +46,21 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity }) {
                 <span>${item.price * item.quantity}</span>
               </div>
             ))}          
-              <div className="order-total">
-                <strong>{t('confirmOrder.total')}：</strong> <span className="total-price">${total}</span>
+            <div className="order-total-and-pickup">
+              <div className="pickup-time">
+                <strong>{t('confirmOrder.pickupTime')}：</strong>
+                <span  className="total-price">{pickupTime || t('notSelected')}</span>
               </div>
+              <div className="order-total">
+                <strong>{t('confirmOrder.total')}：</strong>
+                <span className="total-price">${total}</span>
+              </div>
+            </div>
           </div>
           <div>
-            <button className="confirm-order-button" onClick={() => navigate('/confirm-order')}>{t('confirmOrder.confirmOrder')}</button>
+            <button className="confirm-order-button" onClick={handleConfirmOrder}>
+              {t('confirmOrder.confirmOrder')}
+            </button>
           </div>
         </>
       )}

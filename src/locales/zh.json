@@ -65,7 +65,8 @@
       "orderNumber": "訂單編號",
       "confirmationMessage": "您的訂單已成功提交。我們將盡快處理您的訂單。",
       "continueShopping": "繼續購物",
-      "backToHome": "返回首頁"
+      "backToHome": "返回首頁",
+      "downloadScreenshot": "儲存訂單"
     },
     "address": "地址",
     "phone": "電話",

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { API_ENDPOINTS } from '../api/endpoints';
 import Swal from 'sweetalert2';
 
-const ConfirmOrderPage = ({ cart, clearCart, pickupTime }) => {
+const ConfirmOrderPage = ({ cart, clearCart }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('09');
@@ -13,6 +14,8 @@ const ConfirmOrderPage = ({ cart, clearCart, pickupTime }) => {
   const [note, setNote] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [carrierError, setCarrierError] = useState('');
+
+  const pickupTime = location.state?.pickupTime || '';
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -38,7 +41,7 @@ const ConfirmOrderPage = ({ cart, clearCart, pickupTime }) => {
     setCarrier(value);
     
     // 驗證載具格式
-    const carrierRegex = /^\/[A-Z]{2}\d{14}$|^\/\d{8}$/;
+    const carrierRegex = /^\/[A-Z]{2}\d{14}$|^\/\d{8}$|^\/[A-Z0-9]{7}$/;
     if (value.length > 1 && !carrierRegex.test(value)) {
       setCarrierError(t('errors.invalidCarrier'));
     } else {
@@ -74,7 +77,6 @@ const ConfirmOrderPage = ({ cart, clearCart, pickupTime }) => {
       Mobile: mobile,
       Carrier: carrier,
       Note: note.slice(0, 100),
-      //State: t('orderStatus.pending'),
       State: t('待處理'),
       PickupTime: pickupTime,
       OrderDetail: cart.map(item => ({
@@ -87,7 +89,6 @@ const ConfirmOrderPage = ({ cart, clearCart, pickupTime }) => {
   
     try {
       setIsSubmitting(true);
-
       const response = await fetch(API_ENDPOINTS.CHECKOUT, {
         method: 'POST',
         headers: {
@@ -97,35 +98,42 @@ const ConfirmOrderPage = ({ cart, clearCart, pickupTime }) => {
       });
   
       if (!response.ok) {
-        const errorData = await response.text();
+        const errorData = await response.json();
         console.error('Error Response:', errorData);
-        throw new Error(t('errors.orderSubmissionFailed'));
+        throw new Error('訂單提交失敗');
       }
   
       const result = await response.json();
 
-      // 使用24小時制格式化訂單時間
-      const orderTime = new Date().toLocaleString('zh-TW', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
+      await Swal.fire({
+        icon: 'success',
+        title: '訂購成功',
+        text: `訂單編號：${result.orderId}`,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
       });
 
+      const orderTime = new Date().toLocaleString();
       const orderNumber = result.orderId;
 
       clearCart();
 
-      navigate('/order-confirmation', { state: { orderTime, orderNumber } });
+      navigate('/order-confirmation', { 
+        state: { 
+          orderTime, 
+          orderNumber,
+          pickupTime  // 添加 pickupTime 到導航狀態
+        } 
+      });
     } catch (error) {
       console.error('Error:', error);
       Swal.fire({
         icon: 'error',
-        title: t('errors.orderSubmissionFailed'),
-        text: t('errors.tryAgainLater'),
+        title: '訂單提交失敗',
+        text: '請稍後再試。',
       });
     } finally {
       setIsSubmitting(false);
@@ -150,7 +158,7 @@ const ConfirmOrderPage = ({ cart, clearCart, pickupTime }) => {
         </div>
         <div className="order-total-and-pickup">
           <div className="pickup-time">
-            <strong>{t('pickupTime')}：</strong>
+            <strong>{t('confirmOrder.pickupTime')}：</strong>
             <span className="total-price">{pickupTime || t('notSelected')}</span>
           </div>
           <div className="order-total">

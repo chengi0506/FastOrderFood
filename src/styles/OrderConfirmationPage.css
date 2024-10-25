@@ -52,17 +52,19 @@ h2 {
 .action-buttons {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .button {
   flex: 1;
-  padding: 0.75rem 1.5rem;
+  padding: 10px;
   border-radius: 4px;
   text-decoration: none;
   font-weight: bold;
-  transition: background-color 0.3s;
   text-align: center;
+  transition: background-color 0.3s;
+  font-size: 14px;
 }
 
 .primary-button {
@@ -83,13 +85,62 @@ h2 {
   background-color: #e0e0e0;
 }
 
-@media (max-width: 480px) {
+.download-button {
+  background-color: #4a4a4a;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download-button:hover {
+  background-color: #3a3a3a;
+}
+
+.download-button svg {
+  margin-right: 5px;
+}
+
+@media (max-width: 600px) {
   .action-buttons {
     flex-direction: column;
+  }
+
+  .button {
+    margin-bottom: 10px;
   }
 }
 
 .highlight-text {
   color: #ff0000;
   font-weight: bold;
+}
+
+.store-info {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.store-info h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.store-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+@media print {
+  .order-confirmation-container {
+    background-color: white;
+  }
+
+  .order-confirmation-card {
+    box-shadow: none;
+  }
+
+  .action-buttons {
+    display: none;
+  }
 }
