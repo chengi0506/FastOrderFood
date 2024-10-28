@@ -62,6 +62,7 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
 
   const fetchCategories = async () => {
     try {
+      console.log(API_ENDPOINTS.GET_PROD_CLASS);
       const response = await fetch(API_ENDPOINTS.GET_PROD_CLASS);
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -130,7 +131,9 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
 
   const fetchStoreInfo = async () => {
     try {
+      console.log(API_ENDPOINTS.GET_STORE_INFO);
       const response = await fetch(API_ENDPOINTS.GET_STORE_INFO);
+      console.log('Response:', response);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
