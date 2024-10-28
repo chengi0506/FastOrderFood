@@ -16,12 +16,12 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity, pickupTime })
   };
 
   const handleConfirmOrder = () => {
-    navigate('/confirm-order', { state: { pickupTime } });
+    navigate('/FastOrderFood/confirm-order', { state: { pickupTime } });
   };
 
   return (
     <div className="cart-page">
-      <button className="back-button" onClick={() => navigate('/menu')}>{t('back')}</button>
+      <button className="back-button" onClick={() => navigate('/FastOrderFood/menu')}>{t('back')}</button>
       <h2 className="page-title">{t('cart')}</h2>
       {items.length === 0 ? (
         <p className="empty-cart">{t('emptyCart')}</p>

@@ -74,6 +74,8 @@ body {
 .store-info {
   display: flex;
   flex-direction: column;
+  margin-bottom: 0; /* 移除底部邊距 */
+  padding-bottom: 10px; /* 可以加入適當的內邊距 */
 }
 
 .store-info h2 {
@@ -467,7 +469,7 @@ body {
 }
 
 .menu-content {
-  padding-top: 220px; /* 調��個值以匹配你的header高度 */
+  padding-top: 220px; /* 調個值以匹配你的header高度 */
 }
 
 @keyframes bounce {
@@ -874,3 +876,19 @@ body, html {
 
 }
 
+.menu-container {
+  /* ... */
+  gap: 0; /* 移除容器中的間距 */
+}
+
+.store-info {
+  /* ... */
+  margin-bottom: 0; /* 移除底部邊距 */
+  padding-bottom: 5px; /* 可以加入適當的內邊距 */
+}
+
+.category-menu {
+  /* ... */
+  margin-top: 0; /* 移除頂部邊距 */
+  padding-top: 10px; /* 可以加入適當的內邊距 */
+}

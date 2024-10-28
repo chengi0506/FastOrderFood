@@ -50,10 +50,10 @@ const OrderConfirmationPage = ({ storeInfo }) => {
           <button onClick={downloadScreenshot} className="button download-button">
             <FaDownload /> {t('orderConfirmationPage.downloadScreenshot')}
           </button>
-          <Link to="/menu" className="button primary-button">
+          <Link to="/FastOrderFood/menu" className="button primary-button">
             {t('orderConfirmationPage.continueShopping')}
           </Link>
-          <Link to="/" className="button secondary-button">
+          <Link to="/FastOrderFood/" className="button secondary-button">
             {t('orderConfirmationPage.backToHome')}
           </Link>
         </div>

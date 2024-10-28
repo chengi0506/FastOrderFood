@@ -111,9 +111,9 @@ function App() {
   return (
     <div className="App">
       <main>
-        <Routes>
-          <Route path="/" element={<WelcomePage />} />
-          <Route path="/menu" element={
+        <Routes basename="/FastOrderFood">
+          <Route path="/FastOrderFood/" element={<WelcomePage />} />
+          <Route path="/FastOrderFood/menu" element={
             <MenuPage 
               cart={cart} 
               addToCart={addToCart} 
@@ -122,7 +122,7 @@ function App() {
               pickupTime={pickupTime}
             />
           } />
-          <Route path="/cart" element={
+          <Route path="/FastOrderFood/cart" element={
             <CartPage 
               items={cart} 
               removeFromCart={removeFromCart} 
@@ -131,7 +131,7 @@ function App() {
               pickupTime={pickupTime}
             />
           } />
-          <Route path="/confirm-order" element={
+          <Route path="/FastOrderFood/confirm-order" element={
             <ConfirmOrderPage 
               cart={cart}
               clearCart={clearCart}
@@ -139,9 +139,9 @@ function App() {
               updatePickupTime={updatePickupTime}
             />
           } />
-          <Route path="/error" element={<ErrorPage error={error} />} />
+          <Route path="/FastOrderFood/error" element={<ErrorPage error={error} />} />
           <Route 
-            path="/order-confirmation" 
+            path="/FastOrderFood/order-confirmation" 
             element={<OrderConfirmationPage storeInfo={storeInfo} />} 
           />
         </Routes>

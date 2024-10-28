@@ -1,5 +1,5 @@
 //const BASE_URL = 'http://localhost:5079/api';
-const BASE_URL = 'http://218.161.102.64:81/api';
+const BASE_URL = 'http://218.161.102.64/FastOrderFoodApi/api';
 //const BASE_URL = 'https://ec21-61-218-249-187.ngrok-free.app/api';
 
 export const API_ENDPOINTS = {

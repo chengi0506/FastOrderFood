@@ -9,7 +9,7 @@ function Cart({ items }) {
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="cart-container" onClick={() => navigate('/cart')}>
+    <div className="cart-container" onClick={() => navigate('/FastOrderFood/cart')}>
       <div className="cart">
         <div className="cart-icon">
           <i className="bi bi-cart3"></i>

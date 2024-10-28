@@ -28,7 +28,7 @@ function WelcomePage() {
   };
 
   const navigateToMenu = () => {
-    navigate('/menu');
+    navigate('/FastOrderFood/menu');
   };
 
   return (

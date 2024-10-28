@@ -121,7 +121,7 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
 
       clearCart();
 
-      navigate('/order-confirmation', { 
+      navigate('/FastOrderFood/order-confirmation', { 
         state: { 
           orderTime, 
           orderNumber,
@@ -142,7 +142,7 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
 
   return (
     <div className="confirm-order-page">
-      <button className="back-button" onClick={() => navigate('/cart')}>{t('back')}</button>
+      <button className="back-button" onClick={() => navigate('/FastOrderFood/cart')}>{t('back')}</button>
       <h2 className="page-title">{t('confirmOrder.title')}</h2>
   
       <div className="order-summary">
