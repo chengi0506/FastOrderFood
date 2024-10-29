@@ -239,17 +239,16 @@ body {
   border: none;
   width: 30px;
   height: 30px;
-  font-size: 28px;
+  font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s;
-}
-
-.quantity-control button:hover {
-  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .quantity-control span {
-  width: 30px;
+  width: 40px;
   text-align: center;
   font-size: 16px;
 }
@@ -387,8 +386,8 @@ body {
 
 .cart-item {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
@@ -397,10 +396,14 @@ body {
 .cart-item.cart-header {
   font-weight: bold;
   border-bottom: 2px solid #ddd;
+  margin: 0;
 }
 
 .cart-item span {
   text-align: center;
+  padding: 0;
+  margin: 0;
+  flex: 1;
 }
 
 .cart-item span:first-child {
@@ -486,7 +489,7 @@ body {
 }
 
 .menu-content {
-  padding-top: 220px; /* 調個值以匹配你的header高度 */
+  padding-top: 220px; /* 調個值以匹你的header高度 */
 }
 
 @keyframes bounce {
@@ -998,7 +1001,7 @@ body, html {
     font-size: 12px;
   }
 
-  /* 語言選擇器相關 */
+  /* 語言選擇器相��� */
   .language-selector-container {
     margin-left: auto;
     margin-top: 0;
@@ -1029,6 +1032,77 @@ body, html {
   .pickup-time, 
   .order-total {
     flex-direction: row;
+  }
+}
+
+/* 修改數量控制按鈕的基本樣式 */
+.quantity-control {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.quantity-control button {
+  background-color: #f0f0f0;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-control span {
+  width: 40px;
+  text-align: center;
+  font-size: 16px;
+}
+
+/* 手機版樣式調整 */
+@media (max-width: 768px) {
+  .quantity-control {
+    margin: 8px 0;
+    border-radius: 25px;
+  }
+
+  .quantity-control button {
+    width: 40px;  /* 增加按鈕寬度 */
+    height: 40px; /* 增加按鈕高度 */
+    font-size: 24px; /* 增加字體大小 */
+    padding: 0;
+    touch-action: manipulation; /* 優化觸控體驗 */
+  }
+
+  .quantity-control span {
+    width: 50px; /* 增加數字顯示區域寬度 */
+    font-size: 18px; /* 增加字體大小 */
+    line-height: 40px; /* 確保垂直居中 */
+  }
+
+  /* 購物車頁面的數量控制 */
+  .cart-item .quantity-control button {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    background-color: #f0f0f0;
+    margin: 0 5px;
+  }
+
+  .cart-item .quantity-control span {
+    width: 50px;
+    font-size: 18px;
+  }
+
+  /* 添加觸控反饋 */
+  .quantity-control button:active {
+    background-color: #e0e0e0;
+    transform: scale(0.95);
   }
 }
 
