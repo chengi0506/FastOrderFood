@@ -12,7 +12,6 @@ const OrderConfirmationPage = ({ storeInfo }) => {
   const location = useLocation();
   const confirmationRef = useRef(null);
 
-  // 從 location.state 獲取訂單資訊，如果沒有則使用預設值
   const orderInfo = location.state || {
     orderTime: '-',
     pickupTime: t('notSelected'),
@@ -21,17 +20,56 @@ const OrderConfirmationPage = ({ storeInfo }) => {
 
   const { orderTime, pickupTime, orderNumber } = orderInfo;
 
-  const downloadScreenshot = () => {
-    const element = confirmationRef.current;
-    html2canvas(element, {
-      backgroundColor: '#ffffff',
-      scale: 2,
-    }).then((canvas) => {
-      const link = document.createElement('a');
-      link.download = `order-confirmation-${orderNumber}.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-    });
+  const downloadScreenshot = async () => {
+    try {
+      const element = confirmationRef.current;
+      const canvas = await html2canvas(element, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        logging: true,
+        allowTaint: true,
+      });
+
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        canvas.toBlob(async (blob) => {
+          try {
+            if (navigator.share) {
+              const file = new File([blob], `order-${orderNumber}.png`, { type: 'image/png' });
+              await navigator.share({
+                files: [file],
+                title: t('orderConfirmationPage.orderScreenshot'),
+                text: t('orderConfirmationPage.shareText')
+              });
+            } else {
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = `order-${orderNumber}.png`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }
+          } catch (error) {
+            console.error('Error sharing:', error);
+            window.open(canvas.toDataURL());
+          }
+        }, 'image/png');
+      } else {
+        const link = document.createElement('a');
+        link.download = `order-${orderNumber}.png`;
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error('Screenshot error:', error);
+      alert(t('orderConfirmationPage.screenshotError'));
+    }
   };
 
   const handleBackToMenu = () => {
@@ -44,8 +82,8 @@ const OrderConfirmationPage = ({ storeInfo }) => {
         <FaCheckCircle className="success-icon" />
         <h2>{t('orderConfirmationPage.title')}</h2>
         {storeInfo && (
-          <div className="store-info">
-            <h2>{storeInfo.storeName}</h2>
+          <div>
+            <h4>{storeInfo.storeName}</h4>
             <p>{t('phone')}: {storeInfo.storeContactTel}</p>
             <p>{t('address')}: {storeInfo.storeAddress}</p>
             <p>{t('businessHours')}: {storeInfo.storeBusinessHours}</p>

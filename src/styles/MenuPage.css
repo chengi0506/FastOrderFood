@@ -166,14 +166,14 @@ body {
 }
 
 .search-bar {
-  margin: 10px auto;
+  margin: 5px auto;
   max-width: 600px;
-  padding: 0 15px;
+  padding: 0 10px;
 }
 
 .search-bar input {
   width: 100%;
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #ddd;
   border-radius: 20px;
 }
@@ -472,7 +472,7 @@ body {
   margin: 0 10px;
 }
 
-/* 在文件末尾添加以下樣式 */
+/* 在文件���添加以下樣式 */
 
 .sticky-header {
   position: fixed;
@@ -777,17 +777,26 @@ body, html {
   align-items: center;
   width: 100%;
   margin-top: 10px;
+  padding: 0 10px;
+  gap: 10px;
 }
 
-.search-bar,
+.search-bar {
+  flex: 4;
+}
+
 .pickup-time-selector {
-  flex: 1;
-  max-width: 48%;
+  flex: 6;
 }
 
 .search-bar input,
 .pickup-time-selector select {
   width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 .order-total-and-pickup {
@@ -1001,7 +1010,7 @@ body, html {
     font-size: 12px;
   }
 
-  /* 語言選擇器相��� */
+  /* 語言選擇器相 */
   .language-selector-container {
     margin-left: auto;
     margin-top: 0;
@@ -1016,7 +1025,7 @@ body, html {
   .category-title {
     font-size: 1.5em;
     margin: 10px 0;
-    padding-top: 10px;
+    padding-top: 30px;
   }
 
   /* Footer 相關 */
@@ -1103,6 +1112,64 @@ body, html {
   .quantity-control button:active {
     background-color: #e0e0e0;
     transform: scale(0.95);
+  }
+}
+
+/* 修改 search-and-pickup-container 相關樣式 */
+.search-and-pickup-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+  padding: 0 10px;
+  gap: 10px;
+}
+
+.search-bar {
+  flex: 4; /* 設置搜尋欄寬度比例為 4 */
+}
+
+.pickup-time-selector {
+  flex: 6; /* 設置自取時間選擇器寬度比例為 6 */
+}
+
+.search-bar input,
+.pickup-time-selector select {
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box; /* 確保padding不會影響整體高度 */
+}
+
+/* 手機版樣式 */
+@media (max-width: 768px) {
+  .search-and-pickup-container {
+    flex-direction: row; /* 保持水平排列 */
+    padding: 5px;
+    gap: 5px; /* 將間距從 10px 縮小到 5px */
+  }
+
+  .search-bar {
+    flex: 4; /* 保持 4:6 的比例 */
+  }
+
+  .pickup-time-selector {
+    flex: 6; /* 保持 4:6 的比例 */
+  }
+
+  .search-bar input,
+  .pickup-time-selector select {
+    height: 44px; /* 保持一致的高度 */
+    font-size: 14px;
+    line-height: 24px; /* 添加行高確保文字垂直居中 */
+  }
+
+  .pickup-time-selector select {
+    padding-right: 10px; /* 為下拉箭頭預留空間 */
   }
 }
 
