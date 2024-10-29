@@ -18,6 +18,7 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
   const [pickupTime, setPickupTime] = useState('');
   const [storeInfo, setStoreInfo] = useState(null);
   const [detailsHeight, setDetailsHeight] = useState('100px');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchCategories();
@@ -80,8 +81,8 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
   };
 
   const fetchCategories = async () => {
+    setIsLoading(true);
     try {
-      //console.log(API_ENDPOINTS.GET_PROD_CLASS);
       const response = await fetch(API_ENDPOINTS.GET_PROD_CLASS);
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -94,6 +95,8 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
     } catch (error) {
       console.error('Error fetching categories:', error);
       onError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -121,6 +124,8 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
     } catch (error) {
       console.error('Error fetching all products:', error);
       onError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -240,21 +245,30 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
         </div>
       </header>
       <div className="menu-content">
-        <h2 className="category-title">
-          {searchTerm ? t('searchResults', { searchTerm }) : categories.find(c => c.prodClass3Id === activeCategory)?.prodClass3Name}
-        </h2>
-        <div className="menu-items">
-          {displayedItems.map(item => (
-            <MenuItem 
-              key={item.id} 
-              item={item} 
-              addToCart={addToCart} 
-              isInCart={isItemInCart(item.id)}
-              cartQuantity={getCartItemQuantity(item.id)}
-            />
-          ))}
-        </div>
-        {displayedItems.length === 0 && <p className="no-results">{t('noProductsFound')}</p>}
+        {isLoading ? (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <div className="loading-text">{t('loadingProducts')}</div>
+          </div>
+        ) : (
+          <>
+            <h2 className="category-title">
+              {searchTerm ? t('searchResults', { searchTerm }) : categories.find(c => c.prodClass3Id === activeCategory)?.prodClass3Name}
+            </h2>
+            <div className="menu-items">
+              {displayedItems.map(item => (
+                <MenuItem 
+                  key={item.id} 
+                  item={item} 
+                  addToCart={addToCart} 
+                  isInCart={isItemInCart(item.id)}
+                  cartQuantity={getCartItemQuantity(item.id)}
+                />
+              ))}
+            </div>
+            {displayedItems.length === 0 && <p className="no-results">{t('noProductsFound')}</p>}
+          </>
+        )}
       </div>
       <Cart items={cart} />
     </div>

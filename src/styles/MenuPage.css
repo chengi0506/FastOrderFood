@@ -472,7 +472,7 @@ body {
   margin: 0 10px;
 }
 
-/* 在文件���添加以下樣式 */
+/* 在文件添加�����樣式 */
 
 .sticky-header {
   position: fixed;
@@ -988,7 +988,7 @@ body, html {
     margin: 0;
   }
 
-  /* 商店資訊相關 */
+  /* 商店��訊相關 */
   .store-info {
     display: flex;
     flex-direction: column;
@@ -1170,6 +1170,50 @@ body, html {
 
   .pickup-time-selector select {
     padding-right: 10px; /* 為下拉箭頭預留空間 */
+  }
+}
+
+/* 添加載入畫面相關樣式 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #026EB7;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+.loading-text {
+  color: #666;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 手機版樣式調整 */
+@media (max-width: 768px) {
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+  }
+
+  .loading-text {
+    font-size: 14px;
   }
 }
 

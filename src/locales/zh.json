@@ -70,6 +70,7 @@
     },
     "address": "地址",
     "phone": "電話",
-    "businessHours": "營業時間"
+    "businessHours": "營業時間",
+    "loadingProducts": "正在載入商品..."
   }
 }
