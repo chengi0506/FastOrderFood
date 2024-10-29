@@ -45,7 +45,7 @@ function App() {
 
   const fetchStoreInfo = async () => {
     try {
-      console.log(API_ENDPOINTS.GET_STORE_INFO);
+      //console.log(API_ENDPOINTS.GET_STORE_INFO);
       const response = await fetch(API_ENDPOINTS.GET_STORE_INFO);
       if (!response.ok) {
         throw new Error('Network response was not ok');

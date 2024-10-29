@@ -17,6 +17,7 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
   const [pickupTimes, setPickupTimes] = useState([]);
   const [pickupTime, setPickupTime] = useState('');
   const [storeInfo, setStoreInfo] = useState(null);
+  const [detailsHeight, setDetailsHeight] = useState('100px');
 
   useEffect(() => {
     fetchCategories();
@@ -33,6 +34,24 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
   useEffect(() => {
     filterItems();
   }, [searchTerm, activeCategory, allMenuItems]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > 100) {
+        setDetailsHeight('0');
+      } else {
+        setDetailsHeight('100px');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const generatePickupTimes = () => {
     const now = new Date();
@@ -62,7 +81,7 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
 
   const fetchCategories = async () => {
     try {
-      console.log(API_ENDPOINTS.GET_PROD_CLASS);
+      //console.log(API_ENDPOINTS.GET_PROD_CLASS);
       const response = await fetch(API_ENDPOINTS.GET_PROD_CLASS);
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -131,14 +150,14 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
 
   const fetchStoreInfo = async () => {
     try {
-      console.log(API_ENDPOINTS.GET_STORE_INFO);
+      //console.log(API_ENDPOINTS.GET_STORE_INFO);
       const response = await fetch(API_ENDPOINTS.GET_STORE_INFO);
-      console.log('Response:', response);
+      //console.log('Response:', response);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log('Fetched store info:', data); // 添加這行來記錄獲取的商店信息
+      //console.log('Fetched store info:', data); // 添加這行來記錄獲取的商店信息
       setStoreInfo(data[0]);
     } catch (error) {
       console.error('Error fetching store info:', error);
@@ -166,7 +185,14 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
             {storeInfo && (
               <div className="store-info">
                 <h2>{storeInfo.storeName}</h2>
-                <div className="store-details">
+                <div 
+                  className="store-details" 
+                  style={{
+                    maxHeight: detailsHeight,
+                    overflow: 'hidden',
+                    transition: 'max-height 0.3s ease-out'
+                  }}
+                >
                   <p>{t('address')}: {storeInfo.storeAddress}</p>
                   <p>{t('phone')}: {storeInfo.storeContactTel}</p>
                   <p>{t('businessHours')}: {storeInfo.storeBusinessHours}</p>

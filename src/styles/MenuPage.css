@@ -47,50 +47,66 @@ body {
 
 .top-nav {
   background-color: #fff;
-  padding: 10px 0;
+  padding: 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: relative; /* 添加這一行 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 5px;
+  padding: 5px 5px 0 5px;
+  margin-bottom: 0;
 }
 
 .logo-and-store-info {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   flex: 1;
+  text-align: left;
+  gap: 10px;
 }
 
 .header-icon {
   width: 40px;
   height: 40px;
-  margin-right: 10px;
+  margin: 0;
 }
 
 .store-info {
   display: flex;
   flex-direction: column;
+  margin: 0;
+  justify-content: center;
 }
 
 .store-info h2 {
   margin: 0;
   font-size: 18px;
   color: #333;
+  text-align: left;
+  line-height: 1.2;
+  margin-top: 10px;
 }
 
 .store-details {
   display: flex;
   flex-direction: column;
+  margin-bottom: 0;
+  text-align: left;
 }
 
 .store-details p {
   margin: 2px 0;
   font-size: 14px;
   color: #666;
+  text-align: left;
+  padding-left: 0;
 }
 
 .language-selector-container {
@@ -110,11 +126,14 @@ body {
 .categories-container {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  margin: 0;
+  padding: 0;
 }
 
 .categories-nav {
   width: 100%;
   white-space: nowrap;
+  padding: 5px 0;
 }
 
 .top-nav ul {
@@ -467,7 +486,7 @@ body {
 }
 
 .menu-content {
-  padding-top: 220px; /* 調��個值以匹配你的header高度 */
+  padding-top: 220px; /* 調個值以匹配你的header高度 */
 }
 
 @keyframes bounce {
@@ -486,8 +505,6 @@ body {
   background-color: #fff;
   padding: 10px 0;
 }
-
-/* ... 保持其他樣式不變 */
 
 .error-page {
   height: 100vh;
@@ -648,8 +665,6 @@ body {
   }
 }
 
-/* ... 保持其他樣式不變 ... */
-
 body, html {
   margin: 0;
   padding: 0;
@@ -804,8 +819,6 @@ body, html {
   }
 }
 
-/* ... 其他樣式保持不變 ... */
-
 .in-cart-icon {
   position: absolute;
   top: 10px;
@@ -830,7 +843,7 @@ body, html {
   font-weight: bold;
 }
 
-/* 媒體查詢：針對手機視圖 */
+/* 針對手機*/
 @media (max-width: 768px) {
   .header-content {
     flex-direction: row;
@@ -848,6 +861,15 @@ body, html {
     text-align: left;
   }
 
+  .store-info h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+    text-align: left;
+    line-height: 1.2;
+    padding-top: 15px;
+  }
+
   .store-details {
     margin-top: 5px;
   }
@@ -863,7 +885,7 @@ body, html {
   }
 
   .menu-content {
-    padding-top: 280px; /* 增加頂部內邊距，為手機視圖提供更多空間 */
+    padding-top: 280px;
   }
 
   .category-title {
@@ -872,5 +894,141 @@ body, html {
     padding-top: 10px; /* 減少頂部內邊距 */
   }
 
+}
+
+/* 修改手機版樣式 */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 5px;
+  }
+
+  .logo-and-store-info {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+  }
+
+  .store-info {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .store-info h2 {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .store-details {
+    margin-top: 5px;
+  }
+
+  .store-details p {
+    margin: 2px 0;
+    font-size: 12px;
+  }
+
+  .language-selector-container {
+    margin-left: auto;
+    align-self: flex-start;
+  }
+
+  .menu-content {
+    padding-top: 220px;
+  }
+
+  .category-title {
+    font-size: 1.5em;
+    margin: 10px 0;
+    padding-top: 10px;
+  }
+}
+
+/* 整合所有手機版樣式 */
+@media (max-width: 768px) {
+  /* Header 相關 */
+  .header-content {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 5px;
+  }
+
+  .logo-and-store-info {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+  }
+
+  /* 商店資訊相關 */
+  .store-info {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .store-info h2 {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .store-details {
+    margin-top: 5px;
+  }
+
+  .store-details p {
+    margin: 2px 0;
+    font-size: 12px;
+  }
+
+  /* 語言選擇器相關 */
+  .language-selector-container {
+    margin-left: auto;
+    margin-top: 0;
+    align-self: flex-start;
+  }
+
+  /* 內容區域相關 */
+  .menu-content {
+    padding-top: 220px;
+  }
+
+  .category-title {
+    font-size: 1.5em;
+    margin: 10px 0;
+    padding-top: 10px;
+  }
+
+  /* Footer 相關 */
+  .app-footer {
+    padding: 15px 0;
+  }
+
+  .app-footer p {
+    font-size: 12px;
+  }
+
+  /* 訂單相關 */
+  .pickup-time, 
+  .order-total {
+    flex-direction: row;
+  }
 }
 
