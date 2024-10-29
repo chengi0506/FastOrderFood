@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { navigateTo } from '../utils/navigation';
 
-function CartPage({ items, removeFromCart, updateCartItemQuantity, pickupTime }) {
+function CartPage({ items, removeFromCart, updateCartItemQuantity, clearCart, pickupTime }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -15,13 +16,17 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity, pickupTime })
     }
   };
 
-  const handleConfirmOrder = () => {
-    navigate('/FastOrderFood/confirm-order', { state: { pickupTime } });
+  const handleBackToMenu = () => {
+    navigateTo.menu(navigate);
+  };
+
+  const handleCheckout = () => {
+    navigateTo.confirmOrder(navigate);
   };
 
   return (
     <div className="cart-page">
-      <button className="back-button" onClick={() => navigate('/FastOrderFood/menu')}>{t('back')}</button>
+      <button className="back-button" onClick={handleBackToMenu}>{t('back')}</button>
       <h2 className="page-title">{t('cart')}</h2>
       {items.length === 0 ? (
         <p className="empty-cart">{t('emptyCart')}</p>
@@ -49,7 +54,7 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity, pickupTime })
             <div className="order-total-and-pickup">
               <div className="pickup-time">
                 <strong>{t('confirmOrder.pickupTime')}：</strong>
-                <span  className="total-price">{pickupTime || t('notSelected')}</span>
+                <span className="total-price">{pickupTime || t('notSelected')}</span>
               </div>
               <div className="order-total">
                 <strong>{t('confirmOrder.total')}：</strong>
@@ -58,7 +63,7 @@ function CartPage({ items, removeFromCart, updateCartItemQuantity, pickupTime })
             </div>
           </div>
           <div>
-            <button className="confirm-order-button" onClick={handleConfirmOrder}>
+            <button className="confirm-order-button" onClick={handleCheckout}>
               {t('confirmOrder.confirmOrder')}
             </button>
           </div>

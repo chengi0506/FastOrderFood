@@ -1,15 +1,25 @@
 import React, { useRef } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaDownload } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import html2canvas from 'html2canvas';
+import { navigateTo } from '../utils/navigation';
 import '../styles/OrderConfirmationPage.css';
 
 const OrderConfirmationPage = ({ storeInfo }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const location = useLocation();
-  const { orderTime, orderNumber, pickupTime } = location.state || {};
   const confirmationRef = useRef(null);
+
+  // 從 location.state 獲取訂單資訊，如果沒有則使用預設值
+  const orderInfo = location.state || {
+    orderTime: '-',
+    pickupTime: t('notSelected'),
+    orderNumber: '-'
+  };
+
+  const { orderTime, pickupTime, orderNumber } = orderInfo;
 
   const downloadScreenshot = () => {
     const element = confirmationRef.current;
@@ -22,6 +32,10 @@ const OrderConfirmationPage = ({ storeInfo }) => {
       link.href = canvas.toDataURL();
       link.click();
     });
+  };
+
+  const handleBackToMenu = () => {
+    navigateTo.home(navigate);
   };
 
   return (
@@ -40,7 +54,7 @@ const OrderConfirmationPage = ({ storeInfo }) => {
         <p className="thank-you-message">{t('orderConfirmationPage.thankYou')}</p>
         <div className="order-details">
           <p><strong>{t('orderConfirmationPage.orderTime')}:</strong> <span className="highlight-text">{orderTime}</span></p>
-          <p><strong>{t('confirmOrder.pickupTime')}:</strong> <span className="highlight-text">{pickupTime || t('notSelected')}</span></p>
+          <p><strong>{t('confirmOrder.pickupTime')}:</strong> <span className="highlight-text">{pickupTime}</span></p>
           <p><strong>{t('orderConfirmationPage.orderNumber')}:</strong> <span className="highlight-text">{orderNumber}</span></p>
         </div>
         <p className="confirmation-message">
@@ -50,12 +64,9 @@ const OrderConfirmationPage = ({ storeInfo }) => {
           <button onClick={downloadScreenshot} className="button download-button">
             <FaDownload /> {t('orderConfirmationPage.downloadScreenshot')}
           </button>
-          <Link to="/FastOrderFood/menu" className="button primary-button">
+          <button onClick={handleBackToMenu} className="button primary-button">
             {t('orderConfirmationPage.continueShopping')}
-          </Link>
-          <Link to="/FastOrderFood/" className="button secondary-button">
-            {t('orderConfirmationPage.backToHome')}
-          </Link>
+          </button>
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ import './styles/App.css';
 import { useTranslation } from 'react-i18next';
 import './i18n';
 import { API_ENDPOINTS } from './api/endpoints';
+import { ROUTES } from './constants/routes';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -111,9 +112,9 @@ function App() {
   return (
     <div className="App">
       <main>
-        <Routes basename="/FastOrderFood">
-          <Route path="/FastOrderFood/" element={<WelcomePage />} />
-          <Route path="/FastOrderFood/menu" element={
+        <Routes>
+          <Route path={ROUTES.HOME} element={<WelcomePage />} />
+          <Route path={ROUTES.MENU} element={
             <MenuPage 
               cart={cart} 
               addToCart={addToCart} 
@@ -122,7 +123,7 @@ function App() {
               pickupTime={pickupTime}
             />
           } />
-          <Route path="/FastOrderFood/cart" element={
+          <Route path={ROUTES.CART} element={
             <CartPage 
               items={cart} 
               removeFromCart={removeFromCart} 
@@ -131,7 +132,7 @@ function App() {
               pickupTime={pickupTime}
             />
           } />
-          <Route path="/FastOrderFood/confirm-order" element={
+          <Route path={ROUTES.CONFIRM_ORDER} element={
             <ConfirmOrderPage 
               cart={cart}
               clearCart={clearCart}
@@ -139,9 +140,9 @@ function App() {
               updatePickupTime={updatePickupTime}
             />
           } />
-          <Route path="/FastOrderFood/error" element={<ErrorPage error={error} />} />
+          <Route path={ROUTES.ERROR} element={<ErrorPage error={error} />} />
           <Route 
-            path="/FastOrderFood/order-confirmation" 
+            path={ROUTES.ORDER_CONFIRMATION} 
             element={<OrderConfirmationPage storeInfo={storeInfo} />} 
           />
         </Routes>

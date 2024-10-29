@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { API_ENDPOINTS } from '../api/endpoints';
+import { ROUTES } from '../constants/routes';
 import Swal from 'sweetalert2';
+import { navigateTo } from '../utils/navigation';
 
-const ConfirmOrderPage = ({ cart, clearCart }) => {
+const ConfirmOrderPage = ({ cart, clearCart, pickupTime }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('09');
@@ -14,8 +15,6 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
   const [note, setNote] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [carrierError, setCarrierError] = useState('');
-
-  const pickupTime = location.state?.pickupTime || '';
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -116,18 +115,17 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
         timerProgressBar: true,
       });
 
-      const orderTime = new Date().toLocaleString();
-      const orderNumber = result.orderId;
-
       clearCart();
 
-      navigate('/FastOrderFood/order-confirmation', { 
-        state: { 
-          orderTime, 
-          orderNumber,
-          pickupTime  // 添加 pickupTime 到導航狀態
-        } 
+      // 現在可以使用 ROUTES
+      navigate(ROUTES.ORDER_CONFIRMATION, {
+        state: {
+          orderTime: new Date().toLocaleString(),
+          pickupTime: pickupTime || t('notSelected'),
+          orderNumber: result.orderId
+        }
       });
+
     } catch (error) {
       console.error('Error:', error);
       Swal.fire({
@@ -140,9 +138,13 @@ const ConfirmOrderPage = ({ cart, clearCart }) => {
     }
   };
 
+  const handleBackToCart = () => {
+    navigateTo.cart(navigate);
+  };
+
   return (
     <div className="confirm-order-page">
-      <button className="back-button" onClick={() => navigate('/FastOrderFood/cart')}>{t('back')}</button>
+      <button className="back-button" onClick={handleBackToCart}>{t('back')}</button>
       <h2 className="page-title">{t('confirmOrder.title')}</h2>
   
       <div className="order-summary">
