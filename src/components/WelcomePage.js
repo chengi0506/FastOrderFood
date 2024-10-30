@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from './LanguageSelector';
 import '../styles/WelcomePage.css';
+import { navigateTo } from '../utils/navigation';
 
 function WelcomePage() {
   const [isDragging, setIsDragging] = useState(false);
@@ -27,8 +28,9 @@ function WelcomePage() {
     setIsDragging(false);
   };
 
+
   const navigateToMenu = () => {
-    navigate('/FastOrderFood/menu');
+    navigateTo.menu(navigate);
   };
 
   return (
