@@ -14,6 +14,8 @@ import { useTranslation } from 'react-i18next';
 import './i18n';
 import { API_ENDPOINTS } from './api/endpoints';
 import { ROUTES } from './constants/routes';
+import AdminLogin from './components/Admin/AdminLogin';
+import AdminDashboard from './components/Admin/AdminDashboard';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -145,6 +147,8 @@ function App() {
             path={ROUTES.ORDER_CONFIRMATION} 
             element={<OrderConfirmationPage storeInfo={storeInfo} />} 
           />
+          <Route path={ROUTES.ADMIN_LOGIN} element={<AdminLogin />} />
+          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
         </Routes>
       </main>
       <Footer />

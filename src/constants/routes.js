@@ -8,5 +8,7 @@ export const ROUTES = {
   CART: `${BASE_PATH}/cart`,
   CONFIRM_ORDER: `${BASE_PATH}/confirm-order`,
   ORDER_CONFIRMATION: `${BASE_PATH}/order-confirmation`,
-  ERROR: `${BASE_PATH}/error`
+  ERROR: `${BASE_PATH}/error`,
+  ADMIN_LOGIN: `${BASE_PATH}/Admin/AdminLogin`,
+  ADMIN_DASHBOARD: `${BASE_PATH}/Admin/Dashboard`
 };
