@@ -7,5 +7,9 @@ export const API_ENDPOINTS = {
   GET_PRODUCTS_BY_CLASS: (prodClass) => `${BASE_URL}/Prod/GetProductsByClass/${prodClass}`,
   CHECKOUT: `${BASE_URL}/Order/Checkout`,
   GET_STORE_INFO : `${BASE_URL}/Store/GetStoreInfo`,
+  UPDATE_STORE_INFO : `${BASE_URL}/Store/UpdateStoreInfo`,
+  UPLOAD_BACKGROUND : `${BASE_URL}/Store/UploadBackground`,
+  DELETE_BACKGROUND : `${BASE_URL}/Store/DeleteBackground`,
+  GET_IMAGE : `${BASE_URL}/Store/GetImage`,
 };
 
