@@ -15,6 +15,7 @@ import {
   Button,
   IconButton,
   CircularProgress,
+  Dialog,
 } from '@mui/material';
 import { 
   Store as StoreIcon,
@@ -33,6 +34,7 @@ const AdminDashboard = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [openPreview, setOpenPreview] = useState(false);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -244,6 +246,17 @@ const AdminDashboard = () => {
     setPreviewUrl(null);
   };
 
+  const handleImageClick = (e) => {
+    if (!e.target.closest('.MuiIconButton-root') && !isLoading) {
+      e.stopPropagation();
+      setOpenPreview(true);
+    }
+  };
+
+  const handleClosePreview = () => {
+    setOpenPreview(false);
+  };
+
   const renderStoreInfoForm = () => (
     <Box component="form" onSubmit={handleStoreInfoUpdate} sx={{ mt: 3 }}>
       <Grid container spacing={2}>
@@ -286,13 +299,17 @@ const AdminDashboard = () => {
                 <Typography variant="subtitle1" gutterBottom>
                   {previewUrl ? '預覽圖片：' : '當前背景圖片：'}
                 </Typography>
-                <Box sx={{ 
-                  position: 'relative', 
-                  display: 'inline-block',
-                  '&:hover .image-overlay': {
-                    opacity: 1
-                  }
-                }}>
+                <Box 
+                  onClick={handleImageClick}
+                  sx={{ 
+                    position: 'relative', 
+                    display: 'inline-block',
+                    '&:hover .image-overlay': {
+                      opacity: 1
+                    },
+                    cursor: 'pointer'
+                  }}
+                >
                   {isLoading ? (
                     <Box sx={{
                       width: '200px',
@@ -337,7 +354,10 @@ const AdminDashboard = () => {
                       }}>
                         <IconButton
                           color="error"
-                          onClick={previewUrl ? handleClearPreview : handleDeleteBackground}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            previewUrl ? handleClearPreview() : handleDeleteBackground();
+                          }}
                           title={previewUrl ? "清除預覽圖片" : "刪除背景圖片"}
                           sx={{
                             backgroundColor: 'rgba(255,255,255,0.9)',
@@ -382,6 +402,58 @@ const AdminDashboard = () => {
           </Button>
         </Grid>
       </Grid>
+
+      <Dialog
+        open={openPreview}
+        onClose={handleClosePreview}
+        maxWidth="lg"
+        PaperProps={{
+          sx: {
+            backgroundColor: 'transparent',
+            boxShadow: 'none',
+            overflow: 'hidden'
+          }
+        }}
+      >
+        <Box
+          sx={{
+            position: 'relative',
+            backgroundColor: 'transparent',
+            p: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={handleClosePreview}
+        >
+          <img
+            src={previewUrl || `${API_ENDPOINTS.GET_IMAGE}?fileName=${storeInfo?.backgroundImage?.replace('/uploads/', '')}&t=${new Date().getTime()}`}
+            alt="放大圖片"
+            style={{
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              objectFit: 'contain',
+              borderRadius: '8px',
+            }}
+          />
+          <Typography
+            sx={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              color: 'white',
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              padding: '8px 16px',
+              borderRadius: '4px',
+              fontSize: '14px',
+            }}
+          >
+            點擊任意處關閉
+          </Typography>
+        </Box>
+      </Dialog>
     </Box>
   );
 
