@@ -27,7 +27,7 @@ const AdminLogin = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (username === '' && password === '') {
+    if (username === '123' && password === '123') {
       localStorage.setItem('isAdminLoggedIn', 'true');
       navigate(ROUTES.ADMIN_DASHBOARD);
     } else {
