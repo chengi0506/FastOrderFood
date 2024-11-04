@@ -103,16 +103,25 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
   const fetchAllProducts = async () => {
     try {
       const allProducts = await Promise.all(
-        categories.map(category =>
-          fetch(API_ENDPOINTS.GET_PRODUCTS_BY_CLASS(category.prodClass3Id))
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Network response was not ok');
-              }
-              return response.json();
-            })
-        )
+        categories.map(async category => {
+          try {
+            const response = await fetch(API_ENDPOINTS.GET_PRODUCTS_BY_CLASS(category.prodClass3Id));
+            if (response.status === 404) {
+              // 如果是 404 錯誤，返回空數組
+              return [];
+            }
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          } catch (error) {
+            // 如果是網絡錯誤或其他錯誤，返回空數組
+            console.warn(`無法獲取類別 ${category.prodClass3Id} 的商品:`, error);
+            return [];
+          }
+        })
       );
+
       const formattedData = allProducts.flat().map(item => ({
         id: item.prodId,
         name: item.prodName,
@@ -122,8 +131,10 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
       }));
       setAllMenuItems(formattedData);
     } catch (error) {
-      console.error('Error fetching all products:', error);
-      onError(error);
+      // 只有在非 404 錯誤時才調用 onError
+      if (error.message !== 'Not Found') {
+        onError(error);
+      }
     } finally {
       setIsLoading(false);
     }
