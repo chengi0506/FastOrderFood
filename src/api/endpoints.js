@@ -11,5 +11,10 @@ export const API_ENDPOINTS = {
   UPLOAD_BACKGROUND : `${BASE_URL}/Store/UploadBackground`,
   DELETE_BACKGROUND : `${BASE_URL}/Store/DeleteBackground`,
   GET_IMAGE : `${BASE_URL}/Store/GetImage`,
+
+  GET_ALL_PRODUCTS: `${BASE_URL}/Prod/GetAllProducts`,
+  UPDATE_PRODUCT_STATUS: `${BASE_URL}/Prod/UpdateProductStatus`,
+  UPLOAD_PRODUCT_IMAGE: `${BASE_URL}/Prod/UploadProductImage`,
+  DELETE_PRODUCT_IMAGE: `${BASE_URL}/Prod/DeleteProductImage`,
 };
 

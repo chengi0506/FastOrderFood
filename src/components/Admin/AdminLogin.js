@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import fastIcon from '../../assets/logo.png';
 import { API_ENDPOINTS } from '../../api/endpoints';
 import { useTranslation } from 'react-i18next';
+import Swal from 'sweetalert2';
 import {
   Container,
   Paper,
@@ -31,7 +32,11 @@ const AdminLogin = () => {
       localStorage.setItem('isAdminLoggedIn', 'true');
       navigate(ROUTES.ADMIN_DASHBOARD);
     } else {
-      alert('用戶名或密碼錯誤！');
+      Swal.fire({
+        title: '錯誤',
+        text: `用戶名或密碼錯誤！`,
+        icon: 'error',
+      });
     }
   };
 

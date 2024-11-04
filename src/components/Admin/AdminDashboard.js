@@ -16,6 +16,14 @@ import {
   IconButton,
   CircularProgress,
   Dialog,
+  Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
 } from '@mui/material';
 import { 
   Store as StoreIcon,
@@ -35,6 +43,13 @@ const AdminDashboard = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productImage, setProductImage] = useState(null);
+  const [openProductImagePreview, setOpenProductImagePreview] = useState(false);
+  const [previewProductImage, setPreviewProductImage] = useState(null);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -225,7 +240,7 @@ const AdminDashboard = () => {
       } catch (error) {
         console.error('Error deleting background:', error);
         await Swal.fire({
-          title: '刪除失敗',
+          title: '刪除異常',
           text: `錯誤：${error.message}`,
           icon: 'error',
           confirmButtonColor: '#3085d6',
@@ -457,18 +472,367 @@ const AdminDashboard = () => {
     </Box>
   );
 
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(API_ENDPOINTS.GET_ALL_PRODUCTS, {
+        method: 'POST',
+      });
+      if (!response.ok) throw new Error('Failed to fetch products');
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      await Swal.fire({
+        title: '錯誤',
+        text: '獲取商品資料失敗',
+        icon: 'error',
+      });
+    }
+  };
+
+  const handleToggleStatus = async (prodId, currentStatus) => {
+    try {
+      const url = `${API_ENDPOINTS.UPDATE_PRODUCT_STATUS}?prodId=${prodId}&isEnabled=${!currentStatus}`;
+      
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(errorData || 'Failed to update status');
+      }
+
+      // 取得商品名稱
+    const product = products.find(p => p.prodId === prodId);
+
+      await Swal.fire({
+        title: '成功',
+        text: `「${product.prodName}」已${!currentStatus ? '上架' : '下架'}`,
+        icon: 'success',
+      });
+
+      fetchProducts(); // 重新獲取商品列表
+    } catch (error) {
+      console.error('Error updating product status:', error);
+      await Swal.fire({
+        title: '錯誤',
+        text: `更新商品狀態失敗：${error.message}`,
+        icon: 'error',
+      });
+    }
+  };
+
+  const handleProductImageUpload = async (prodId, file) => {
+    if (!file) {
+      await Swal.fire({
+        title: '錯誤',
+        text: '請選擇圖片檔案',
+        icon: 'error',
+      });
+      return;
+    }
+
+    // 檢查檔案類型
+    if (!file.type.startsWith('image/')) {
+      await Swal.fire({
+        title: '錯誤',
+        text: '請選擇圖片檔案',
+        icon: 'error',
+      });
+      return;
+    }
+
+    // 檢查檔案大小（例如限制為 5MB）
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      await Swal.fire({
+        title: '錯誤',
+        text: '圖片大小不能超過 5MB',
+        icon: 'error',
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      // 使用查詢參數傳遞 prodId
+      const response = await fetch(
+        `${API_ENDPOINTS.UPLOAD_PRODUCT_IMAGE}?prodId=${prodId}`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(errorData || 'Failed to upload image');
+      }
+
+      // 取得商品名稱
+    const product = products.find(p => p.prodId === prodId);
+      const data = await response.json();
+
+      await Swal.fire({
+        title: '成功',
+        text: `「${product.prodName}」圖片上傳成功`,
+        icon: 'success',
+      });
+
+      fetchProducts(); // 重新獲取商品列表
+    } catch (error) {
+      console.error('Error uploading product image:', error);
+      await Swal.fire({
+        title: '錯誤',
+        text: `上傳商品圖片失敗：${error.message}`,
+        icon: 'error',
+      });
+    }
+  };
+
+  const handleDeleteProductImage = async (prodId) => {
+    const result = await Swal.fire({
+      title: '確認刪除',
+      text: '確定要刪除此商品圖片嗎？',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: '刪除',
+      cancelButtonText: '取消'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`${API_ENDPOINTS.DELETE_PRODUCT_IMAGE}?prodId=${prodId}`, {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) throw new Error('Failed to delete image');
+
+        await Swal.fire({
+          title: '成功',
+          text: '商品圖片已刪除',
+          icon: 'success',
+        });
+
+        fetchProducts(); // 重新獲取商品列表
+      } catch (error) {
+        console.error('Error deleting product image:', error);
+        await Swal.fire({
+          title: '錯誤',
+          text: '刪除商品圖片失敗',
+          icon: 'error',
+        });
+      }
+    }
+  };
+
+  const handleProductImageClick = (e, imageUrl) => {
+    if (!e.target.closest('.MuiIconButton-root')) {
+      e.stopPropagation();
+      setPreviewProductImage(imageUrl);
+      setOpenProductImagePreview(true);
+    }
+  };
+
+  const renderProductsTable = () => (
+    <Box sx={{ width: '100%' }}>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>商品代號</TableCell>
+              <TableCell>商品名稱</TableCell>
+              <TableCell>售價</TableCell>
+              <TableCell>庫存</TableCell>
+              <TableCell>單位</TableCell>
+              <TableCell>商品圖片</TableCell>
+              <TableCell>狀態</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {products
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((product) => (
+                <TableRow key={product.prodId}>
+                  <TableCell>{product.prodId}</TableCell>
+                  <TableCell>{product.prodName}</TableCell>
+                  <TableCell>{product.priceStd}</TableCell>
+                  <TableCell>{product.qtyNow}</TableCell>
+                  <TableCell>{product.stdUnit}</TableCell>
+                  <TableCell>
+                    {product.prodImage ? (
+                      <Box sx={{ 
+                        position: 'relative', 
+                        display: 'inline-block',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          '&::after': {
+                            content: '"點擊放大"',
+                            position: 'absolute',
+                            bottom: '0',
+                            left: '0',
+                            right: '0',
+                            backgroundColor: 'rgba(0,0,0,0.7)',
+                            color: 'white',
+                            fontSize: '12px',
+                            padding: '2px',
+                            textAlign: 'center',
+                          }
+                        }
+                      }}>
+                        <img
+                          src={`${API_ENDPOINTS.GET_IMAGE}?fileName=${product.prodImage.replace('/uploads/', '')}`}
+                          alt={product.prodName}
+                          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                          onClick={(e) => handleProductImageClick(e, product.prodImage)}
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleDeleteProductImage(product.prodId)}
+                          sx={{
+                            position: 'absolute',
+                            top: -10,
+                            right: -10,
+                            backgroundColor: 'rgba(255,255,255,0.9)',
+                            '&:hover': {
+                              backgroundColor: 'rgba(255,255,255,1)'
+                            }
+                          }}
+                        >
+                        </IconButton>
+                      </Box>
+                    ) : (
+                      <Button
+                        component="label"
+                        variant="outlined"
+                        size="small"
+                      >
+                        上傳圖片
+                        <input
+                          type="file"
+                          hidden
+                          accept="image/*"
+                          onChange={(e) => handleProductImageUpload(product.prodId, e.target.files[0])}
+                        />
+                      </Button>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Switch
+                      checked={product.isEnlable}
+                      onChange={() => handleToggleStatus(product.prodId, product.isEnlable)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    {product.prodImage && (
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDeleteProductImage(product.prodId)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        component="div"
+        count={products.length}
+        page={page}
+        onPageChange={(e, newPage) => setPage(newPage)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={(e) => {
+          setRowsPerPage(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
+        labelRowsPerPage="每頁顯示筆數"
+      />
+
+      <Dialog
+        open={openProductImagePreview}
+        onClose={() => setOpenProductImagePreview(false)}
+        maxWidth="lg"
+        PaperProps={{
+          sx: {
+            backgroundColor: 'transparent',
+            boxShadow: 'none',
+            overflow: 'hidden'
+          }
+        }}
+      >
+        <Box
+          sx={{
+            position: 'relative',
+            backgroundColor: 'transparent',
+            p: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={() => setOpenProductImagePreview(false)}
+        >
+          <img
+            src={previewProductImage ? `${API_ENDPOINTS.GET_IMAGE}?fileName=${previewProductImage.replace('/uploads/', '')}&t=${new Date().getTime()}` : ''}
+            alt="商品圖片預覽"
+            style={{
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              objectFit: 'contain',
+              borderRadius: '8px',
+            }}
+          />
+          <Typography
+            sx={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              color: 'white',
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              padding: '8px 16px',
+              borderRadius: '4px',
+              fontSize: '14px',
+            }}
+          >
+            點擊任意處關閉
+          </Typography>
+        </Box>
+      </Dialog>
+    </Box>
+  );
+
   const renderContent = () => {
     switch (selectedMenu) {
       case 'storeInfo':
         return renderStoreInfoForm();
       case 'products':
-        return <Typography>商品管理功能開發中...</Typography>;
+        return renderProductsTable();
       case 'orders':
         return <Typography>訂單管理功能開發中...</Typography>;
       default:
         return null;
     }
   };
+
+  useEffect(() => {
+    if (selectedMenu === 'products') {
+      fetchProducts();
+    }
+  }, [selectedMenu]);
 
   return (
     <Container>
