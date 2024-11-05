@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { 
-  Container, 
   Typography, 
   Box,
   Grid,
@@ -16,9 +15,6 @@ import {
   IconButton,
   CircularProgress,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Switch,
   Table,
   TableBody,
@@ -52,6 +48,10 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from '@mui/icons-material';
+import PendingIcon from '@mui/icons-material/HourglassEmpty';
+import InProgressIcon from '@mui/icons-material/Autorenew';
+import DoneIcon from '@mui/icons-material/CheckCircle';
+import CanceledIcon from '@mui/icons-material/Cancel';
 import { ROUTES } from '../../constants/routes';
 import { API_ENDPOINTS } from '../../api/endpoints';
 import { styled } from '@mui/material/styles';
@@ -171,17 +171,37 @@ const OrderRow = ({ order, onStateChange }) => {
         <TableCell>{order.pickupTime}</TableCell>
         <TableCell>{order.amt}</TableCell>
         <TableCell>
-          <Select
-            value={order.state}
-            onChange={(e) => onStateChange(order.id, e.target.value)}
-            size="small"
-          >
-            <MenuItem value="待處理">待處理</MenuItem>
-            <MenuItem value="處理中">處理中</MenuItem>
-            <MenuItem value="已完成">已完成</MenuItem>
-            <MenuItem value="已取消">已取消</MenuItem>
-          </Select>
-        </TableCell>
+        <Select
+          value={order.state}
+          onChange={(e) => onStateChange(order.id, e.target.value)}
+          size="small"
+        >
+          <MenuItem value="待處理">
+            <ListItemIcon>
+              <PendingIcon fontSize="small" sx={{ color: '#1976d2' }} /> {/* 藍色 */}
+            </ListItemIcon>
+            待處理
+          </MenuItem>
+          <MenuItem value="處理中">
+            <ListItemIcon>
+              <InProgressIcon fontSize="small" sx={{ color: '#00796b' }} /> {/* 深綠色 */}
+            </ListItemIcon>
+            處理中
+          </MenuItem>
+          <MenuItem value="已完成">
+            <ListItemIcon>
+              <DoneIcon fontSize="small" sx={{ color: '#388e3c' }} /> {/* 深綠色 */}
+            </ListItemIcon>
+            已完成
+          </MenuItem>
+          <MenuItem value="已取消">
+            <ListItemIcon>
+              <CanceledIcon fontSize="small" sx={{ color: '#d32f2f' }} /> {/* 深紅色 */}
+            </ListItemIcon>
+            已取消
+          </MenuItem>
+        </Select>
+      </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
