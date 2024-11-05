@@ -24,6 +24,11 @@ import {
   TableHead,
   TableRow,
   TablePagination,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem as MuiMenuItem,
+  InputAdornment,
 } from '@mui/material';
 import { 
   Store as StoreIcon,
@@ -31,6 +36,7 @@ import {
   ShoppingCart as OrderIcon,
   Upload as UploadIcon,
   Delete as DeleteIcon,
+  Search as SearchIcon,
 } from '@mui/icons-material';
 import { ROUTES } from '../../constants/routes';
 import { API_ENDPOINTS } from '../../api/endpoints';
@@ -50,6 +56,10 @@ const AdminDashboard = () => {
   const [productImage, setProductImage] = useState(null);
   const [openProductImagePreview, setOpenProductImagePreview] = useState(false);
   const [previewProductImage, setPreviewProductImage] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedClass, setSelectedClass] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -642,8 +652,78 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(API_ENDPOINTS.GET_PROD_CLASS);
+      if (!response.ok) throw new Error('Failed to fetch categories');
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedMenu === 'products') {
+      fetchProducts();
+      fetchCategories();
+    }
+  }, [selectedMenu]);
+
+  useEffect(() => {
+    let filtered = [...products];
+    
+    // 根據類別過濾
+    if (selectedClass) {
+      filtered = filtered.filter(product => product.prodClass3Id === selectedClass);
+    }
+    
+    // 根據搜尋詞過濾
+    if (searchTerm) {
+      filtered = filtered.filter(product => 
+        product.prodId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.prodName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    setFilteredProducts(filtered);
+  }, [products, selectedClass, searchTerm]);
+
   const renderProductsTable = () => (
     <Box sx={{ width: '100%' }}>
+      <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
+        <TextField
+          placeholder="搜尋商品..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ flexGrow: 1 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel>商品類別</InputLabel>
+          <Select
+            value={selectedClass}
+            onChange={(e) => setSelectedClass(e.target.value)}
+            label="商品類別"
+          >
+            <MuiMenuItem value="">
+              <em>全部類別</em>
+            </MuiMenuItem>
+            {categories.map((category) => (
+              <MuiMenuItem key={category.prodClass3Id} value={category.prodClass3Id}>
+                {category.prodClass3Name}
+              </MuiMenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -654,12 +734,12 @@ const AdminDashboard = () => {
               <TableCell>庫存</TableCell>
               <TableCell>單位</TableCell>
               <TableCell>商品圖片</TableCell>
-              <TableCell>狀態</TableCell>
+              <TableCell>上架</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {products
+            {filteredProducts
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((product) => (
                 <TableRow key={product.prodId}>
@@ -750,7 +830,7 @@ const AdminDashboard = () => {
       </TableContainer>
       <TablePagination
         component="div"
-        count={products.length}
+        count={filteredProducts.length}
         page={page}
         onPageChange={(e, newPage) => setPage(newPage)}
         rowsPerPage={rowsPerPage}
@@ -827,12 +907,6 @@ const AdminDashboard = () => {
         return null;
     }
   };
-
-  useEffect(() => {
-    if (selectedMenu === 'products') {
-      fetchProducts();
-    }
-  }, [selectedMenu]);
 
   return (
     <Container>
