@@ -143,7 +143,7 @@ const OrderRow = ({ order, onStateChange }) => {
       console.error('Error fetching order details:', error);
       Swal.fire({
         title: '錯誤',
-        text: '獲取訂單明��失敗',
+        text: '獲取訂單明失敗',
         icon: 'error',
         position: 'top',
       });
@@ -252,6 +252,7 @@ const AdminDashboard = () => {
   const [openOrderDetails, setOpenOrderDetails] = useState(false);
   const [orderPage, setOrderPage] = useState(0);
   const [orderRowsPerPage, setOrderRowsPerPage] = useState(10);
+  const [isOrdersLoading, setIsOrdersLoading] = useState(false);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -410,7 +411,7 @@ const AdminDashboard = () => {
   
     if (result.isConfirmed) {
       try {
-        // 调用删除背景���片的 API
+        // 调用删除背景片的 API
         const deleteResponse = await fetch(
           `${API_ENDPOINTS.DELETE_BACKGROUND}?storeId=${storeInfo.storeId}`,
           {
@@ -796,7 +797,7 @@ const AdminDashboard = () => {
         toast: true,
         position: 'bottom-end',
         icon: 'success', 
-        title: `「${product.prodName}」��片上傳成功`,
+        title: `「${product.prodName}」片上傳成功`,
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
@@ -1149,6 +1150,7 @@ const AdminDashboard = () => {
   );
 
   const fetchOrders = async () => {
+    setIsOrdersLoading(true);
     try {
       const response = await fetch(API_ENDPOINTS.GET_ORDERS, {
         method: 'POST',
@@ -1164,9 +1166,7 @@ const AdminDashboard = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Server error:', errorData);
-        throw new Error(errorData || 'Failed to fetch orders');
+        throw new Error('Failed to fetch orders');
       }
 
       const data = await response.json();
@@ -1179,6 +1179,8 @@ const AdminDashboard = () => {
         icon: 'error',
         position: 'top',
       });
+    } finally {
+      setIsOrdersLoading(false);
     }
   };
 
@@ -1289,48 +1291,73 @@ const AdminDashboard = () => {
       </Box>
 
       <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>訂單編號</TableCell>
-              <TableCell>訂購時間</TableCell>
-              <TableCell>訂購人</TableCell>
-              <TableCell>手機</TableCell>
-              <TableCell>取餐時間</TableCell>
-              <TableCell>金額</TableCell>
-              <TableCell>狀態</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders
-              .slice(orderPage * orderRowsPerPage, orderPage * orderRowsPerPage + orderRowsPerPage)
-              .map((order) => (
-                <OrderRow 
-                  key={order.id} 
-                  order={order}
-                  onStateChange={handleUpdateOrderState}
-                />
-              ))}
-          </TableBody>
-        </Table>
+        {isOrdersLoading ? (
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            alignItems: 'center', 
+            justifyContent: 'center',
+            minHeight: '300px'
+          }}>
+            <CircularProgress />
+            <Typography sx={{ mt: 2 }}>載入訂單資料中...</Typography>
+          </Box>
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>訂單編號</TableCell>
+                <TableCell>訂購時間</TableCell>
+                <TableCell>訂購人</TableCell>
+                <TableCell>手機</TableCell>
+                <TableCell>取餐時間</TableCell>
+                <TableCell>金額</TableCell>
+                <TableCell>狀態</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {orders.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} align="center">
+                    <Typography sx={{ py: 2 }}>
+                      無符合條件的訂單
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                orders
+                  .slice(orderPage * orderRowsPerPage, orderPage * orderRowsPerPage + orderRowsPerPage)
+                  .map((order) => (
+                    <OrderRow 
+                      key={order.id} 
+                      order={order}
+                      onStateChange={handleUpdateOrderState}
+                    />
+                  ))
+              )}
+            </TableBody>
+          </Table>
+        )}
       </TableContainer>
 
-      <TablePagination
-        component="div"
-        count={orders.length}
-        page={orderPage}
-        onPageChange={(e, newPage) => setOrderPage(newPage)}
-        rowsPerPage={orderRowsPerPage}
-        onRowsPerPageChange={(e) => {
-          setOrderRowsPerPage(parseInt(e.target.value, 10));
-          setOrderPage(0);
-        }}
-        labelRowsPerPage="每頁顯示筆數"
-        labelDisplayedRows={({ from, to, count }) => 
-          `第 ${from}-${to} 筆，共 ${count} 筆`
-        }
-      />
+      {!isOrdersLoading && orders.length > 0 && (
+        <TablePagination
+          component="div"
+          count={orders.length}
+          page={orderPage}
+          onPageChange={(e, newPage) => setOrderPage(newPage)}
+          rowsPerPage={orderRowsPerPage}
+          onRowsPerPageChange={(e) => {
+            setOrderRowsPerPage(parseInt(e.target.value, 10));
+            setOrderPage(0);
+          }}
+          labelRowsPerPage="每頁顯示筆數"
+          labelDisplayedRows={({ from, to, count }) => 
+            `第 ${from}-${to} 筆，共 ${count} 筆`
+          }
+        />
+      )}
     </Box>
   );
 
