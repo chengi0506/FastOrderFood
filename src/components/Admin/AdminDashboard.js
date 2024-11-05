@@ -16,6 +16,9 @@ import {
   IconButton,
   CircularProgress,
   Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Switch,
   Table,
   TableBody,
@@ -34,6 +37,7 @@ import {
   AppBar,
   Toolbar,
   Divider,
+  Collapse,
 } from '@mui/material';
 import { 
   Store as StoreIcon,
@@ -45,10 +49,17 @@ import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   Logout as LogoutIcon,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
 } from '@mui/icons-material';
 import { ROUTES } from '../../constants/routes';
 import { API_ENDPOINTS } from '../../api/endpoints';
 import { styled } from '@mui/material/styles';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import { API_KEY } from '../../config/config';
 
 const drawerWidth = 240;
 
@@ -99,6 +110,119 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+const OrderRow = ({ order, onStateChange }) => {
+  const [open, setOpen] = useState(true);
+  const [details, setDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchDetails();
+  }, []);
+
+  const fetchDetails = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(API_ENDPOINTS.GET_ORDER_DETAILS, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Id: order.id,
+          apiKey: API_KEY
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch order details');
+      }
+
+      const data = await response.json();
+      setDetails(data);
+    } catch (error) {
+      console.error('Error fetching order details:', error);
+      Swal.fire({
+        title: '錯誤',
+        text: '獲取訂單明細失敗',
+        icon: 'error',
+        position: 'top',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </IconButton>
+        </TableCell>
+        <TableCell>{order.orderID}</TableCell>
+        <TableCell>{dayjs(order.dateTime).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
+        <TableCell>{order.name}</TableCell>
+        <TableCell>{order.mobile}</TableCell>
+        <TableCell>{order.pickupTime}</TableCell>
+        <TableCell>{order.amt}</TableCell>
+        <TableCell>
+          <Select
+            value={order.state}
+            onChange={(e) => onStateChange(order.id, e.target.value)}
+            size="small"
+          >
+            <MuiMenuItem value="待處理">待處理</MuiMenuItem>
+            <MuiMenuItem value="處理中">處理中</MuiMenuItem>
+            <MuiMenuItem value="已完成">已完成</MuiMenuItem>
+            <MuiMenuItem value="已取消">已取消</MuiMenuItem>
+          </Select>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
+          <Collapse in={open} timeout="auto">
+            <Box sx={{ margin: 1 }}>
+              {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Table size="small">
+                  <TableHead>
+                    <TableRow sx={{ backgroundColor: 'rgba(0, 0, 0, 0.15)' }}>
+                      <TableCell>商品編號</TableCell>
+                      <TableCell>商品名稱</TableCell>
+                      <TableCell>數量</TableCell>
+                      <TableCell>小計</TableCell>
+                      <TableCell>備註</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {details.map((detail) => (
+                      <TableRow key={detail.id}>
+                        <TableCell align="left">{detail.prodId}</TableCell>
+                        <TableCell align="left">{detail.prodName}</TableCell>
+                        <TableCell align="left">{detail.quantity}</TableCell>
+                        <TableCell align="left">{detail.subtotal}</TableCell>
+                        <TableCell align="left">{detail.note}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState('storeInfo');
@@ -119,6 +243,13 @@ const AdminDashboard = () => {
   const [categories, setCategories] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth >= 600);
+  const [orders, setOrders] = useState([]);
+  const [startDate, setStartDate] = useState(dayjs().subtract(7, 'day'));
+  const [endDate, setEndDate] = useState(dayjs());
+  const [orderState, setOrderState] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderDetails, setOrderDetails] = useState([]);
+  const [openOrderDetails, setOpenOrderDetails] = useState(false);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -171,8 +302,8 @@ const AdminDashboard = () => {
       }
 
       await Swal.fire({
-        title: '更新成功！',
-        text: '商店資訊已成功更新',
+        title: '儲存成功！',
+        text: '商店資訊儲存成功',
         icon: 'success',
         confirmButtonColor: '#3085d6',
       });
@@ -186,7 +317,7 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error updating store info:', error);
       await Swal.fire({
-        title: '更新失敗',
+        title: '儲存失敗',
         text: `錯誤：${error.message}`,
         icon: 'error',
         confirmButtonColor: '#3085d6',
@@ -488,7 +619,7 @@ const AdminDashboard = () => {
               float: 'right'
             }}
           >
-            更新商店資訊
+            儲存
           </Button>
         </Grid>
       </Grid>
@@ -504,6 +635,11 @@ const AdminDashboard = () => {
             overflow: 'hidden'
           }
         }}
+        container={() => document.getElementById('dialog-root')}
+        disablePortal={false}
+        disableEnforceFocus
+        disableAutoFocus
+        keepMounted
       >
         <Box
           sx={{
@@ -798,7 +934,7 @@ const AdminDashboard = () => {
         gap: 2 
       }}>
         <TextField
-          placeholder="搜尋商品..."
+          placeholder="搜商品..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{ 
@@ -962,6 +1098,11 @@ const AdminDashboard = () => {
             overflow: 'hidden'
           }
         }}
+        container={() => document.getElementById('dialog-root')}
+        disablePortal={false}
+        disableEnforceFocus
+        disableAutoFocus
+        keepMounted
       >
         <Box
           sx={{
@@ -1005,6 +1146,174 @@ const AdminDashboard = () => {
     </Box>
   );
 
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch(API_ENDPOINTS.GET_ORDERS, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          startDate: startDate.startOf('day').toISOString(),
+          endDate: endDate.endOf('day').toISOString(),
+          state: orderState,
+          apiKey: API_KEY
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Server error:', errorData);
+        throw new Error(errorData || 'Failed to fetch orders');
+      }
+
+      const data = await response.json();
+      setOrders(data);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      await Swal.fire({
+        title: '錯誤',
+        text: '獲取訂單資料失敗',
+        icon: 'error',
+        position: 'top',
+      });
+    }
+  };
+
+  const handleUpdateOrderState = async (Id, newState) => {
+    try {
+      const response = await fetch(API_ENDPOINTS.UPDATE_ORDER_STATE, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Id: Id,
+          state: newState,
+          apiKey: API_KEY,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update order state');
+
+      await Swal.fire({
+        toast: true,
+        position: 'bottom-end',
+        icon: 'success', 
+        title: `訂單狀態「${newState}」已更新`,
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        backdrop: false,
+        customClass: {
+          container: 'swal2-toast-container'
+        }
+      });
+
+      fetchOrders();
+    } catch (error) {
+      console.error('Error updating order state:', error);
+      await Swal.fire({
+        title: '錯誤',
+        text: '更新訂單狀態失敗',
+        icon: 'error',
+      });
+    }
+  };
+
+  const renderOrdersTable = () => (
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ 
+        mb: 3, 
+        display: 'flex', 
+        flexDirection: { xs: 'column', sm: 'row' },
+        gap: 2,
+        alignItems: 'center'
+      }}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="開始日期"
+            value={startDate}
+            onChange={setStartDate}
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
+            slotProps={{
+              popper: {
+                container: document.getElementById('dialog-root'),
+                disablePortal: false,
+              },
+              textField: {
+                onFocus: (e) => e.target.blur(),  // 防止鍵盤輸入
+              },
+            }}
+          />
+          <DatePicker
+            label="結束日期"
+            value={endDate}
+            onChange={setEndDate}
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
+            slotProps={{
+              popper: {
+                container: document.getElementById('dialog-root'),
+                disablePortal: false,
+              },
+              textField: {
+                onFocus: (e) => e.target.blur(),  // 防止鍵盤輸入
+              },
+            }}
+          />
+        </LocalizationProvider>
+        <FormControl sx={{ width: { xs: '100%', sm: 'auto' } }}>
+          <InputLabel>訂單狀態</InputLabel>
+          <Select
+            value={orderState}
+            onChange={(e) => setOrderState(e.target.value)}
+            label="訂單狀態"
+            sx={{ width: { xs: '100%', sm: '200px' } }}
+          >
+            <MuiMenuItem value="">全部</MuiMenuItem>
+            <MuiMenuItem value="待處理">待處理</MuiMenuItem>
+            <MuiMenuItem value="處理中">處理中</MuiMenuItem>
+            <MuiMenuItem value="已完成">已完成</MuiMenuItem>
+            <MuiMenuItem value="已取消">已取消</MuiMenuItem>
+          </Select>
+        </FormControl>
+        <Button
+          variant="contained"
+          onClick={fetchOrders}
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
+        >
+          查詢
+        </Button>
+      </Box>
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>訂單編號</TableCell>
+              <TableCell>訂購時間</TableCell>
+              <TableCell>訂購人</TableCell>
+              <TableCell>手機</TableCell>
+              <TableCell>取餐時間</TableCell>
+              <TableCell>金額</TableCell>
+              <TableCell>狀態</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {orders.map((order) => (
+              <OrderRow 
+                key={order.id} 
+                order={order}
+                onStateChange={handleUpdateOrderState}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+
   const renderContent = () => {
     switch (selectedMenu) {
       case 'storeInfo':
@@ -1012,7 +1321,7 @@ const AdminDashboard = () => {
       case 'products':
         return renderProductsTable();
       case 'orders':
-        return <Typography>訂單管理功能開發中...</Typography>;
+        return renderOrdersTable();
       default:
         return null;
     }

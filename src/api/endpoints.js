@@ -16,5 +16,9 @@ export const API_ENDPOINTS = {
   UPDATE_PRODUCT_STATUS: `${BASE_URL}/Prod/UpdateProductStatus`,
   UPLOAD_PRODUCT_IMAGE: `${BASE_URL}/Prod/UploadProductImage`,
   DELETE_PRODUCT_IMAGE: `${BASE_URL}/Prod/DeleteProductImage`,
+
+  GET_ORDERS: `${BASE_URL}/Order/GetOrders`,
+  GET_ORDER_DETAILS: `${BASE_URL}/Order/GetOrderDetails`,
+  UPDATE_ORDER_STATE: `${BASE_URL}/Order/UpdateOrderState`,
 };
 
