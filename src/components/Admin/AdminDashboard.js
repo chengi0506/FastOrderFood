@@ -1207,7 +1207,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleUpdateOrderState = async (Id, newState) => {
+  const handleUpdateOrderState = async (orderId, newState) => {
     try {
       const response = await fetch(API_ENDPOINTS.UPDATE_ORDER_STATE, {
         method: 'PUT',
@@ -1215,35 +1215,42 @@ const AdminDashboard = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          Id: Id,
+          id: orderId,
           state: newState,
           apiKey: API_KEY,
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to update order state');
+      if (!response.ok) {
+        throw new Error('Failed to update order state');
+      }
 
+      // 直接更新本地狀態，而不是重新獲取整個列表
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order.id === orderId 
+            ? { ...order, state: newState }
+            : order
+        )
+      );
+
+      // 使用 toast 樣式的提示，不影響使用者操作
       await Swal.fire({
+        title: `訂單狀態更新為「${newState}」`,
+        icon: 'success',
         toast: true,
         position: 'bottom-end',
-        icon: 'success', 
-        title: `訂單狀態更新為「${newState}」`,
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
-        backdrop: false,
-        customClass: {
-          container: 'swal2-toast-container'
-        }
       });
-
-      fetchOrders();
     } catch (error) {
       console.error('Error updating order state:', error);
       await Swal.fire({
-        title: '錯誤',
-        text: '更新訂單狀態失敗',
+        title: '更新失敗',
+        text: error.message,
         icon: 'error',
+        position: 'top',
       });
     }
   };
@@ -1340,7 +1347,7 @@ const AdminDashboard = () => {
         ) : (
           <Table>
             <TableHead>
-              <TableRow>
+              <TableRow >
                 <TableCell />
                 <TableCell>訂單編號</TableCell>
                 <TableCell>訂購時間</TableCell>
