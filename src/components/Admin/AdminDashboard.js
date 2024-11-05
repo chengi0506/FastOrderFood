@@ -30,7 +30,7 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem as MuiMenuItem,
+  MenuItem,
   InputAdornment,
   CssBaseline,
   Drawer,
@@ -154,7 +154,7 @@ const OrderRow = ({ order, onStateChange }) => {
 
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } ,backgroundColor: 'rgba(0, 0, 0, 0.1)'}} >
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -164,7 +164,7 @@ const OrderRow = ({ order, onStateChange }) => {
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell>{order.orderID}</TableCell>
+        <TableCell sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>{order.orderID}</TableCell>
         <TableCell>{dayjs(order.dateTime).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
         <TableCell>{order.name}</TableCell>
         <TableCell>{order.mobile}</TableCell>
@@ -176,10 +176,10 @@ const OrderRow = ({ order, onStateChange }) => {
             onChange={(e) => onStateChange(order.id, e.target.value)}
             size="small"
           >
-            <MuiMenuItem value="待處理">待處理</MuiMenuItem>
-            <MuiMenuItem value="處理中">處理中</MuiMenuItem>
-            <MuiMenuItem value="已完成">已完成</MuiMenuItem>
-            <MuiMenuItem value="已取消">已取消</MuiMenuItem>
+            <MenuItem value="待處理">待處理</MenuItem>
+            <MenuItem value="處理中">處理中</MenuItem>
+            <MenuItem value="已完成">已完成</MenuItem>
+            <MenuItem value="已取消">已取消</MenuItem>
           </Select>
         </TableCell>
       </TableRow>
@@ -194,7 +194,7 @@ const OrderRow = ({ order, onStateChange }) => {
               ) : (
                 <Table size="small">
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: 'rgba(0, 0, 0, 0.15)' }}>
+                    <TableRow>
                       <TableCell>商品編號</TableCell>
                       <TableCell>商品名稱</TableCell>
                       <TableCell>數量</TableCell>
@@ -253,6 +253,7 @@ const AdminDashboard = () => {
   const [orderPage, setOrderPage] = useState(0);
   const [orderRowsPerPage, setOrderRowsPerPage] = useState(10);
   const [isOrdersLoading, setIsOrdersLoading] = useState(false);
+  const [orderIdQuery, setOrderIdQuery] = useState('');
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -961,13 +962,13 @@ const AdminDashboard = () => {
             onChange={(e) => setSelectedClass(e.target.value)}
             label="商品類別"
           >
-            <MuiMenuItem value="">
+            <MenuItem value="">
               <em>全部類別</em>
-            </MuiMenuItem>
+            </MenuItem>
             {categories.map((category) => (
-              <MuiMenuItem key={category.prodClass3Id} value={category.prodClass3Id}>
+              <MenuItem key={category.prodClass3Id} value={category.prodClass3Id}>
                 {category.prodClass3Name}
-              </MuiMenuItem>
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -1161,6 +1162,7 @@ const AdminDashboard = () => {
           startDate: startDate.startOf('day').toISOString(),
           endDate: endDate.endOf('day').toISOString(),
           state: orderState,
+          orderId: orderIdQuery.trim(),
           apiKey: API_KEY
         }),
       });
@@ -1171,6 +1173,7 @@ const AdminDashboard = () => {
 
       const data = await response.json();
       setOrders(data);
+      setOrderPage(0);
     } catch (error) {
       console.error('Error fetching orders:', error);
       await Swal.fire({
@@ -1204,7 +1207,7 @@ const AdminDashboard = () => {
         toast: true,
         position: 'bottom-end',
         icon: 'success', 
-        title: `訂單狀態「${newState}」已更新`,
+        title: `訂單狀態更新為「${newState}」`,
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
@@ -1234,6 +1237,14 @@ const AdminDashboard = () => {
         gap: 2,
         alignItems: 'center'
       }}>
+        <TextField
+          label="訂單編號"
+          value={orderIdQuery}
+          onChange={(e) => setOrderIdQuery(e.target.value)}
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
+          size="small"
+          placeholder="請輸入訂單編號"
+        />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="開始日期"
@@ -1246,7 +1257,8 @@ const AdminDashboard = () => {
                 disablePortal: false,
               },
               textField: {
-                onFocus: (e) => e.target.blur(),  // 防止鍵盤輸入
+                size: "small",
+                onFocus: (e) => e.target.blur(),
               },
             }}
           />
@@ -1261,24 +1273,27 @@ const AdminDashboard = () => {
                 disablePortal: false,
               },
               textField: {
-                onFocus: (e) => e.target.blur(),  // 防止鍵盤輸入
+                size: "small",
+                onFocus: (e) => e.target.blur(),
               },
             }}
           />
         </LocalizationProvider>
         <FormControl sx={{ width: { xs: '100%', sm: 'auto' } }}>
-          <InputLabel>訂單狀態</InputLabel>
+          <InputLabel id="order-state-label">訂單狀態</InputLabel>
           <Select
+            labelId="order-state-label"
             value={orderState}
             onChange={(e) => setOrderState(e.target.value)}
             label="訂單狀態"
-            sx={{ width: { xs: '100%', sm: '200px' } }}
+            size="small"
+            sx={{ width: { xs: 'auto', sm: '200px' } }}
           >
-            <MuiMenuItem value="">全部</MuiMenuItem>
-            <MuiMenuItem value="待處理">待處理</MuiMenuItem>
-            <MuiMenuItem value="處理中">處理中</MuiMenuItem>
-            <MuiMenuItem value="已完成">已完成</MuiMenuItem>
-            <MuiMenuItem value="已取消">已取消</MuiMenuItem>
+            <MenuItem value="">全部</MenuItem>
+            <MenuItem value="待處理">待處理</MenuItem>
+            <MenuItem value="處理中">處理中</MenuItem>
+            <MenuItem value="已完成">已完成</MenuItem>
+            <MenuItem value="已取消">已取消</MenuItem>
           </Select>
         </FormControl>
         <Button
