@@ -1264,14 +1264,6 @@ const AdminDashboard = () => {
         gap: 2,
         alignItems: 'center'
       }}>
-        <TextField
-          label="訂單編號"
-          value={orderIdQuery}
-          onChange={(e) => setOrderIdQuery(e.target.value)}
-          sx={{ width: { xs: '100%', sm: 'auto' } }}
-          size="small"
-          placeholder="請輸入訂單編號"
-        />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="開始日期"
@@ -1323,6 +1315,14 @@ const AdminDashboard = () => {
             <MenuItem value="已取消">已取消</MenuItem>
           </Select>
         </FormControl>
+        <TextField
+          label="訂單編號"
+          value={orderIdQuery}
+          onChange={(e) => setOrderIdQuery(e.target.value)}
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
+          size="small"
+          placeholder="請輸入訂單編號"
+        />
         <Button
           variant="contained"
           onClick={fetchOrders}
