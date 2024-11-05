@@ -1332,7 +1332,13 @@ const AdminDashboard = () => {
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
+      <TableContainer 
+        component={Paper} 
+        sx={{ 
+          maxHeight: 'calc(100vh - 300px)',  // 設置最大高度，留出空間給其他元素
+          overflow: 'auto'  // 啟用滾動
+        }}
+      >
         {isOrdersLoading ? (
           <Box sx={{ 
             display: 'flex', 
@@ -1345,7 +1351,7 @@ const AdminDashboard = () => {
             <Typography sx={{ mt: 2 }}>載入訂單資料中...</Typography>
           </Box>
         ) : (
-          <Table>
+          <Table stickyHeader>
             <TableHead>
               <TableRow >
                 <TableCell />
