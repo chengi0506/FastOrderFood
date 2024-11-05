@@ -143,7 +143,7 @@ const OrderRow = ({ order, onStateChange }) => {
       console.error('Error fetching order details:', error);
       Swal.fire({
         title: '錯誤',
-        text: '獲取訂單明細失敗',
+        text: '獲取訂單明��失敗',
         icon: 'error',
         position: 'top',
       });
@@ -250,6 +250,8 @@ const AdminDashboard = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orderDetails, setOrderDetails] = useState([]);
   const [openOrderDetails, setOpenOrderDetails] = useState(false);
+  const [orderPage, setOrderPage] = useState(0);
+  const [orderRowsPerPage, setOrderRowsPerPage] = useState(10);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -408,7 +410,7 @@ const AdminDashboard = () => {
   
     if (result.isConfirmed) {
       try {
-        // 调用删除背景图片的 API
+        // 调用删除背景���片的 API
         const deleteResponse = await fetch(
           `${API_ENDPOINTS.DELETE_BACKGROUND}?storeId=${storeInfo.storeId}`,
           {
@@ -794,7 +796,7 @@ const AdminDashboard = () => {
         toast: true,
         position: 'bottom-end',
         icon: 'success', 
-        title: `「${product.prodName}」圖片上傳成功`,
+        title: `「${product.prodName}」��片上傳成功`,
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
@@ -1301,16 +1303,34 @@ const AdminDashboard = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order) => (
-              <OrderRow 
-                key={order.id} 
-                order={order}
-                onStateChange={handleUpdateOrderState}
-              />
-            ))}
+            {orders
+              .slice(orderPage * orderRowsPerPage, orderPage * orderRowsPerPage + orderRowsPerPage)
+              .map((order) => (
+                <OrderRow 
+                  key={order.id} 
+                  order={order}
+                  onStateChange={handleUpdateOrderState}
+                />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <TablePagination
+        component="div"
+        count={orders.length}
+        page={orderPage}
+        onPageChange={(e, newPage) => setOrderPage(newPage)}
+        rowsPerPage={orderRowsPerPage}
+        onRowsPerPageChange={(e) => {
+          setOrderRowsPerPage(parseInt(e.target.value, 10));
+          setOrderPage(0);
+        }}
+        labelRowsPerPage="每頁顯示筆數"
+        labelDisplayedRows={({ from, to, count }) => 
+          `第 ${from}-${to} 筆，共 ${count} 筆`
+        }
+      />
     </Box>
   );
 
