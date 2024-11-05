@@ -107,16 +107,15 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
           try {
             const response = await fetch(API_ENDPOINTS.GET_PRODUCTS_BY_CLASS(category.prodClass3Id));
             if (response.status === 404) {
-              // 如果是 404 錯誤，返回空數組
               return [];
             }
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
-            return response.json();
+            const data = await response.json();
+            console.log('Products data:', data); // 添加日誌來檢查數據
+            return data;
           } catch (error) {
-            // 如果是網絡錯誤或其他錯誤，返回空數組
-            console.warn(`無法獲取類別 ${category.prodClass3Id} 的商品:`, error);
             return [];
           }
         })
@@ -127,11 +126,12 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
         name: item.prodName,
         price: item.priceStd,
         category: item.prodClass3Id,
-        unit: item.stdUnit
+        unit: item.stdUnit,
+        prodImage: item.prodImage  // 確保這個欄位名稱與後端返回的一致
       }));
+      console.log('Formatted data:', formattedData); // 添加日誌來檢查格式化後的數據
       setAllMenuItems(formattedData);
     } catch (error) {
-      // 只有在非 404 錯誤時才調用 onError
       if (error.message !== 'Not Found') {
         onError(error);
       }

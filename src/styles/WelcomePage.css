@@ -280,7 +280,7 @@ html, body, #root {
     background-color: #015a96;
   }
   
-  /* 在文件末���加以下樣式 */
+  /* 在文件末加以下樣式 */
   
   .cart-page {
     max-width: 800px;
@@ -642,6 +642,38 @@ html, body, #root {
   
   .confirm-order-button:hover {
     background-color: #015a96;
+  }
+  
+  .menu-item-image {
+    width: 100%;
+    height: 120px;  /* 調整高度 */
+    margin-bottom: 10px;
+    overflow: hidden;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .menu-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;  /* 改為 contain 以保持圖片比例 */
+    transition: transform 0.3s ease;
+    padding: 5px;  /* 添加內邊距 */
+  }
+  
+  .menu-item-image img:hover {
+    transform: scale(1.05);
+  }
+  
+  .menu-item {
+    position: relative;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;  /* 添加元素間距 */
   }
   
 
