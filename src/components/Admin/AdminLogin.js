@@ -69,7 +69,7 @@ const AdminLogin = () => {
               <img src={fastIcon} alt={t('fastFoodIcon')} className="header-icon" />
               {storeInfo && (
                 <div className="store-info">
-                  <h2>{storeInfo.storeName}後台</h2>
+                  <h2>{storeInfo.storeName}-後台管理系統</h2>
                   <div className="store-details">
                     <p>{t('address')}: {storeInfo.storeAddress}</p>
                     <p>{t('phone')}: {storeInfo.storeContactTel}</p>

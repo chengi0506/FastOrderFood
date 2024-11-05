@@ -29,6 +29,11 @@ import {
   Select,
   MenuItem as MuiMenuItem,
   InputAdornment,
+  CssBaseline,
+  Drawer,
+  AppBar,
+  Toolbar,
+  Divider,
 } from '@mui/material';
 import { 
   Store as StoreIcon,
@@ -37,9 +42,62 @@ import {
   Upload as UploadIcon,
   Delete as DeleteIcon,
   Search as SearchIcon,
+  Menu as MenuIcon,
+  ChevronLeft as ChevronLeftIcon,
+  Logout as LogoutIcon,
 } from '@mui/icons-material';
 import { ROUTES } from '../../constants/routes';
 import { API_ENDPOINTS } from '../../api/endpoints';
+import { styled } from '@mui/material/styles';
+
+const drawerWidth = 240;
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `-${drawerWidth}px`,
+    ...(open && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    }),
+  }),
+);
+
+const AppBarStyled = styled(AppBar, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    backgroundColor: '#ffffff',
+    color: '#000000',
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+    ...(open && {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: `${drawerWidth}px`,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  }),
+);
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 1),
+  ...theme.mixins.toolbar,
+  justifyContent: 'flex-end',
+}));
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -60,6 +118,7 @@ const AdminDashboard = () => {
   const [selectedClass, setSelectedClass] = useState('');
   const [categories, setCategories] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [drawerOpen, setDrawerOpen] = useState(window.innerWidth >= 600);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -232,7 +291,7 @@ const AdminDashboard = () => {
           throw new Error(errorData || 'Delete failed');
         }
   
-        // 删除成功后再更新状态
+        // 删除成后再更新状态
         setStoreInfo((prevInfo) => ({
           ...prevInfo,
           backgroundImage: '',
@@ -261,7 +320,7 @@ const AdminDashboard = () => {
   
 
   const menuItems = [
-    { text: '管理商店資訊', icon: <StoreIcon />, value: 'storeInfo' },
+    { text: '管理商店', icon: <StoreIcon />, value: 'storeInfo' },
     { text: '管理商品', icon: <InventoryIcon />, value: 'products' },
     { text: '管理訂單', icon: <OrderIcon />, value: 'orders' },
   ];
@@ -419,9 +478,15 @@ const AdminDashboard = () => {
         <Grid item xs={12}>
           <Button
             type="submit"
-            fullWidth
             variant="contained"
-            color="primary"
+            color="error"
+            sx={{ 
+              mt: 2,
+              width: 'auto',
+              px: 4,
+              py: 1,
+              float: 'right'
+            }}
           >
             更新商店資訊
           </Button>
@@ -590,18 +655,34 @@ const AdminDashboard = () => {
       const data = await response.json();
 
       await Swal.fire({
-        title: '成功',
-        text: `「${product.prodName}」圖片上傳成功`,
-        icon: 'success',
+        toast: true,
+        position: 'bottom-end',
+        icon: 'success', 
+        title: `「${product.prodName}」圖片上傳成功`,
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        backdrop: false,
+        customClass: {
+          container: 'swal2-toast-container'
+        }
       });
 
       fetchProducts(); // 重新獲取商品列表
     } catch (error) {
       console.error('Error uploading product image:', error);
       await Swal.fire({
-        title: '錯誤',
-        text: `上傳商品圖片失敗：${error.message}`,
+        toast: true,
+        position: 'bottom-end',
         icon: 'error',
+        title: `上傳商品圖片失敗：${error.message}`,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        backdrop: false,
+        customClass: {
+          container: 'swal2-toast-container'
+        }
       });
     }
   };
@@ -615,7 +696,10 @@ const AdminDashboard = () => {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       confirmButtonText: '刪除',
-      cancelButtonText: '取消'
+      cancelButtonText: '取消',
+      customClass: {
+        container: 'swal2-container'
+      }
     });
 
     if (result.isConfirmed) {
@@ -627,18 +711,34 @@ const AdminDashboard = () => {
         if (!response.ok) throw new Error('Failed to delete image');
 
         await Swal.fire({
-          title: '成功',
-          text: '商品圖片已刪除',
-          icon: 'success',
+          toast: true,
+          position: 'bottom-end',
+          icon: 'success', 
+          title: '商品圖片已刪除',
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          backdrop: false,
+          customClass: {
+            container: 'swal2-toast-container'
+          }
         });
 
         fetchProducts(); // 重新獲取商品列表
       } catch (error) {
         console.error('Error deleting product image:', error);
         await Swal.fire({
-          title: '錯誤',
-          text: '刪除商品圖片失敗',
+          toast: true,
+          position: 'bottom-end',
           icon: 'error',
+          title: '刪除商品圖片失敗',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          backdrop: false,
+          customClass: {
+            container: 'swal2-toast-container'
+          }
         });
       }
     }
@@ -691,12 +791,20 @@ const AdminDashboard = () => {
 
   const renderProductsTable = () => (
     <Box sx={{ width: '100%' }}>
-      <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
+      <Box sx={{ 
+        mb: 3, 
+        display: 'flex', 
+        flexDirection: { xs: 'column', sm: 'row' },  // 在小螢幕上垂直排列
+        gap: 2 
+      }}>
         <TextField
           placeholder="搜尋商品..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ flexGrow: 1 }}
+          sx={{ 
+            flexGrow: 1,
+            width: { xs: '100%', sm: 'auto' }  // 在小螢幕上佔滿寬度
+          }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -705,7 +813,9 @@ const AdminDashboard = () => {
             ),
           }}
         />
-        <FormControl sx={{ minWidth: 200 }}>
+        <FormControl sx={{ 
+          minWidth: { xs: '100%', sm: 200 }  // 在小螢幕上佔滿寬度
+        }}>
           <InputLabel>商品類別</InputLabel>
           <Select
             value={selectedClass}
@@ -908,36 +1018,101 @@ const AdminDashboard = () => {
     }
   };
 
+  // 處理登出
+  const handleLogout = () => {
+    localStorage.removeItem('isAdminLoggedIn');
+    navigate(ROUTES.ADMIN_LOGIN);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      // 根據螢幕寬度決定選單是否顯示
+      setDrawerOpen(window.innerWidth >= 600);
+    };
+
+    // 監聽視窗大小變化
+    window.addEventListener('resize', handleResize);
+
+    // 清理函數
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // 修改選單項目點擊處理函數
+  const handleMenuItemClick = (value) => {
+    setSelectedMenu(value);
+    // 在手機版時自動隱藏選單
+    if (window.innerWidth < 600) {
+      setDrawerOpen(false);
+    }
+  };
+
   return (
-    <Container>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={3}>
-          <Paper sx={{ mt: 4 }}>
-            <List>
-              {menuItems.map((item) => (
-                <ListItem
-                  key={item.value}
-                  selected={selectedMenu === item.value}
-                  onClick={() => setSelectedMenu(item.value)}
-                  sx={{ cursor: 'pointer' }}
-                >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={9}>
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h4" component="h1" gutterBottom>
-              {menuItems.find(item => item.value === selectedMenu)?.text}
-            </Typography>
-            {renderContent()}
-          </Box>
-        </Grid>
-      </Grid>
-    </Container>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBarStyled position="fixed" open={drawerOpen}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={() => setDrawerOpen(true)}
+            edge="start"
+            sx={{ mr: 2, ...(drawerOpen && { display: 'none' }) }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+            {storeInfo?.storeName ? `${storeInfo.storeName} - 後台管理系統` : '後台管理系統'}
+          </Typography>
+          <IconButton color="inherit" onClick={handleLogout} title="登出">
+            <LogoutIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBarStyled>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}
+        variant="persistent"
+        anchor="left"
+        open={drawerOpen}
+      >
+        <DrawerHeader>
+          <IconButton onClick={() => setDrawerOpen(false)}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+          {menuItems.map((item) => (
+            <ListItem
+              key={item.value}
+              selected={selectedMenu === item.value}
+              onClick={() => handleMenuItemClick(item.value)}
+              sx={{ cursor: 'pointer' }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+      <Main open={drawerOpen}>
+        <DrawerHeader />
+        <Box sx={{ p: 3 }}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            {menuItems.find(item => item.value === selectedMenu)?.text}
+          </Typography>
+          {renderContent()}
+        </Box>
+      </Main>
+    </Box>
   );
 };
 
