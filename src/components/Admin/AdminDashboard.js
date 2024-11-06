@@ -958,7 +958,7 @@ const AdminDashboard = () => {
         gap: 2 
       }}>
         <TextField
-          placeholder="搜商品..."
+          placeholder="搜尋商品"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{ 
