@@ -21,6 +21,7 @@ import {
   Inventory as InventoryIcon,
   ShoppingCart as OrderIcon,
   Logout as LogoutIcon,
+  QrCode as QrCodeIcon,
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { ROUTES } from '../../constants/routes';
@@ -90,6 +91,11 @@ const menuItems = [
     text: '管理訂單', 
     icon: <OrderIcon />, 
     path: ROUTES.ADMIN_ORDERS 
+  },
+  { 
+    text: '列印標籤', 
+    icon: <QrCodeIcon />, 
+    path: ROUTES.ADMIN_LABEL 
   },
 ];
 

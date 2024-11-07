@@ -180,7 +180,7 @@ const OrderManagement = () => {
       // 狀態更新成功 toast 提示
       await Swal.fire({
         title: '狀態更新成功',
-        text: `訂單 ${updatedOrder.orderID} 狀態已更新為「${newState}」`,
+        text: `訂單 「${updatedOrder.orderID} 」狀態更新為「${newState}」`,
         icon: 'success',
         toast: true,
         position: 'bottom-end',
