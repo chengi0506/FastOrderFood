@@ -22,6 +22,8 @@ import {
   ShoppingCart as OrderIcon,
   Logout as LogoutIcon,
   QrCode as QrCodeIcon,
+  Home as HomeIcon,
+  Restaurant as RestaurantIcon,
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { ROUTES } from '../../constants/routes';
@@ -137,6 +139,10 @@ const AdminDashboard = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handleOpenOrderPage = () => {
+    window.open(ROUTES.HOME, '_blank');
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -154,6 +160,22 @@ const AdminDashboard = () => {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {storeInfo?.storeName ? `${storeInfo.storeName} - 後台管理系統` : '後台管理系統'}
           </Typography>
+          <IconButton 
+            color="inherit" 
+            onClick={handleOpenOrderPage}
+            title="開啟點餐頁面"
+            sx={{ mr: 1 }}
+          >
+            <RestaurantIcon />
+          </IconButton>
+          <IconButton 
+            color="inherit" 
+            onClick={() => navigate(ROUTES.ADMIN_DASHBOARD)}
+            title="回首頁"
+            sx={{ mr: 1 }}
+          >
+            <HomeIcon />
+          </IconButton>
           <IconButton color="inherit" onClick={handleLogout} title="登出">
             <LogoutIcon />
           </IconButton>
