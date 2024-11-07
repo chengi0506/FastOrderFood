@@ -4,18 +4,12 @@ import Swal from 'sweetalert2';
 import { 
   Typography, 
   Box,
-  Grid,
   Paper,
-  List,
-  ListItem,
   ListItemIcon,
-  ListItemText,
   TextField,
   Button,
   IconButton,
   CircularProgress,
-  Dialog,
-  Switch,
   Table,
   TableBody,
   TableCell,
@@ -27,24 +21,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  InputAdornment,
-  CssBaseline,
-  Drawer,
-  AppBar,
-  Toolbar,
-  Divider,
   Collapse,
 } from '@mui/material';
 import { 
-  Store as StoreIcon,
-  Inventory as InventoryIcon,
-  ShoppingCart as OrderIcon,
-  Upload as UploadIcon,
-  Delete as DeleteIcon,
-  Search as SearchIcon,
-  Menu as MenuIcon,
-  ChevronLeft as ChevronLeftIcon,
-  Logout as LogoutIcon,
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from '@mui/icons-material';
@@ -52,17 +31,16 @@ import PendingIcon from '@mui/icons-material/HourglassEmpty';
 import InProgressIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/CheckCircle';
 import CanceledIcon from '@mui/icons-material/Cancel';
-import { ROUTES } from '../../constants/routes';
 import { API_ENDPOINTS } from '../../api/endpoints';
-import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { API_KEY } from '../../config/config';
+import { ROUTES } from '../../constants/routes';
 
 const OrderManagement = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState('storeInfo');
   const [storeInfo, setStoreInfo] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -96,8 +74,7 @@ const OrderManagement = () => {
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
     if (!isLoggedIn) {
-      navigate('/FastOrderFood/Admin/');
-      return;
+      navigate(ROUTES.ADMIN_LOGIN);
     }
     fetchOrders();
   }, [navigate]);

@@ -32,6 +32,7 @@ import { API_ENDPOINTS } from '../../api/endpoints';
 import { API_KEY } from '../../config/config';
 import Swal from 'sweetalert2';
 import noImage from '../../assets/no-image.png';
+import { ROUTES } from '../../constants/routes';
 
 const ProductManagement = () => {
   const navigate = useNavigate();
@@ -48,8 +49,7 @@ const ProductManagement = () => {
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
     if (!isLoggedIn) {
-      navigate('/FastOrderFood/Admin/');
-      return;
+      navigate(ROUTES.ADMIN_LOGIN);
     }
     fetchCategories();
     fetchProducts();

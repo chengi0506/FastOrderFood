@@ -17,6 +17,7 @@ import {
 import { API_ENDPOINTS } from '../../api/endpoints';
 import { API_KEY } from '../../config/config';
 import Swal from 'sweetalert2';
+import { ROUTES } from '../../constants/routes';
 
 const StoreManagement = () => {
   const navigate = useNavigate();
@@ -29,8 +30,7 @@ const StoreManagement = () => {
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
     if (!isLoggedIn) {
-      navigate('/FastOrderFood/Admin/');
-      return;
+      navigate(ROUTES.ADMIN_LOGIN);
     }
     fetchStoreInfo();
   }, [navigate]);
@@ -132,11 +132,15 @@ const StoreManagement = () => {
         }
 
         await Swal.fire({
-          title: '成功',
-          text: '背景圖片已刪除',
-          icon: 'success',
-          position: 'top',
-        });
+            title: '成功',
+            text: '背景圖片已刪除',
+            icon: 'success',
+            toast: true,
+            position: 'bottom-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+          });
 
         fetchStoreInfo();
       } catch (error) {
@@ -199,7 +203,11 @@ const StoreManagement = () => {
         title: '更新成功！',
         text: '商店資訊已成功更新',
         icon: 'success',
-        confirmButtonColor: '#3085d6',
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
       });
 
       setSelectedFile(null);
