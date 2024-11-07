@@ -15,6 +15,7 @@ import './i18n';
 import { API_ENDPOINTS } from './api/endpoints';
 import { ROUTES } from './constants/routes';
 import AdminLogin from './components/Admin/AdminLogin';
+import AdminMain from './components/Admin/AdminMain';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import StoreManagement from './components/Admin/StoreManagement';
 import ProductManagement from './components/Admin/ProductManagement';
@@ -152,7 +153,7 @@ function App() {
             element={<OrderConfirmationPage storeInfo={storeInfo} />} 
           />
           <Route path={ROUTES.ADMIN_LOGIN} element={<AdminLogin />} />
-          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />}>
+          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminMain />}>
             <Route index element={<AdminDashboard />} />
             <Route path="store" element={<StoreManagement />} />
             <Route path="products" element={<ProductManagement />} />

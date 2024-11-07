@@ -13,6 +13,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -28,210 +32,228 @@ import {
 import { styled } from '@mui/material/styles';
 import { ROUTES } from '../../constants/routes';
 import { API_ENDPOINTS } from '../../api/endpoints';
-
-const drawerWidth = 240;
-
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: `-${drawerWidth}px`,
-    ...(open && {
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    }),
-  }),
-);
-
-const AppBarStyled = styled(AppBar, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    backgroundColor: '#ffffff',
-    color: '#000000',
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-    ...(open && {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: `${drawerWidth}px`,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    }),
-  }),
-);
-
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
-}));
-
-const menuItems = [
-  { 
-    text: '管理商店', 
-    icon: <StoreIcon />, 
-    path: ROUTES.ADMIN_STORE 
-  },
-  { 
-    text: '管理商品', 
-    icon: <InventoryIcon />, 
-    path: ROUTES.ADMIN_PRODUCTS 
-  },
-  { 
-    text: '管理訂單', 
-    icon: <OrderIcon />, 
-    path: ROUTES.ADMIN_ORDERS 
-  },
-  { 
-    text: '列印標籤', 
-    icon: <QrCodeIcon />, 
-    path: ROUTES.ADMIN_LABEL 
-  },
-];
+import { API_KEY } from '../../config/config';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from 'recharts';
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
-  const [drawerOpen, setDrawerOpen] = useState(window.innerWidth >= 600);
-  const [storeInfo, setStoreInfo] = useState(null);
+  const [productStats, setProductStats] = useState({
+    total: 0,
+    active: 0,
+    inactive: 0
+  });
+  const [orderStats, setOrderStats] = useState([]);
+  const [orderStatusStats, setOrderStatusStats] = useState([]);
+  const [dateRange, setDateRange] = useState({
+    start: '',
+    end: ''
+  });
 
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
-    if (!isLoggedIn) {
-      navigate(ROUTES.ADMIN_LOGIN);
-    }
-    fetchStoreInfo();
-  }, [navigate]);
-
-  const fetchStoreInfo = async () => {
-    try {
-      const response = await fetch(API_ENDPOINTS.GET_STORE_INFO);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
-      setStoreInfo(data[0]);
-    } catch (error) {
-      console.error('Error fetching store info:', error);
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('isAdminLoggedIn');
-    navigate(ROUTES.ADMIN_LOGIN);
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      setDrawerOpen(window.innerWidth >= 600);
+  // 獲取本月第一天和最後一天
+  const getMonthRange = () => {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    return {
+      start: firstDay.toISOString(),
+      end: lastDay.toISOString()
     };
+  };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+  // 格式化日期為西元年月
+  const formatDateToYearMonth = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}年${String(date.getMonth() + 1).padStart(2, '0')}月`;
+  };
+
+  const fetchDashboardStats = async () => {
+    try {
+      // 獲取商品統計
+      const productResponse = await fetch(API_ENDPOINTS.GET_PRODUCT_STATS, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ apiKey: API_KEY }),
+      });
+
+      if (!productResponse.ok) {
+        throw new Error(`商品統計請求失敗: ${productResponse.status}`);
+      }
+
+      const productData = await productResponse.json();
+      setProductStats(productData);
+
+      // 獲取本月訂單統計
+      const monthRange = getMonthRange();
+      const orderResponse = await fetch(API_ENDPOINTS.GET_ORDER_STATS, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          startDate: monthRange.start,
+          endDate: monthRange.end,
+          apiKey: API_KEY
+        }),
+      });
+
+      if (!orderResponse.ok) {
+        throw new Error(`訂單統計請求失敗: ${orderResponse.status}`);
+      }
+
+      const orderData = await orderResponse.json();
+      
+      if (orderData && orderData.dailyStats && orderData.statusStats) {
+        setOrderStats(orderData.dailyStats);
+        setOrderStatusStats(orderData.statusStats);
+        
+        // 設置日期範圍，使用新的格式化函數
+        setDateRange({
+          start: formatDateToYearMonth(monthRange.start),
+          end: formatDateToYearMonth(monthRange.end)
+        });
+      } else {
+        console.warn('訂單統計數據格式不正確:', orderData);
+        setOrderStats([]);
+        setOrderStatusStats([]);
+      }
+
+    } catch (error) {
+      console.error('統計資料獲取錯誤:', error);
+      setProductStats({
+        total: 0,
+        active: 0,
+        inactive: 0
+      });
+      setOrderStats([]);
+      setOrderStatusStats([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardStats();
   }, []);
 
-  const handleOpenOrderPage = () => {
-    window.open(ROUTES.HOME, '_blank');
-  };
+  // 圓餅圖顏色
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBarStyled position="fixed" open={drawerOpen}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={() => setDrawerOpen(true)}
-            edge="start"
-            sx={{ mr: 2, ...(drawerOpen && { display: 'none' }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            {storeInfo?.storeName ? `${storeInfo.storeName} - 後台管理系統` : '後台管理系統'}
-          </Typography>
-          <IconButton 
-            color="inherit" 
-            onClick={handleOpenOrderPage}
-            title="開啟點餐頁面"
-            sx={{ mr: 1 }}
-          >
-            <RestaurantIcon />
-          </IconButton>
-          <IconButton 
-            color="inherit" 
-            onClick={() => navigate(ROUTES.ADMIN_DASHBOARD)}
-            title="回首頁"
-            sx={{ mr: 1 }}
-          >
-            <HomeIcon />
-          </IconButton>
-          <IconButton color="inherit" onClick={handleLogout} title="登出">
-            <LogoutIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBarStyled>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={drawerOpen}
-      >
-        <DrawerHeader>
-          <IconButton onClick={() => setDrawerOpen(false)}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {menuItems.map((item) => (
-            <ListItem
-              key={item.path}
-              component={Link}
-              to={item.path}
-              sx={{ 
-                cursor: 'pointer',
-                color: '#000000',
-                '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                },
-                '& .MuiListItemIcon-root': {
-                  color: '#000000',
-                },
-                '& .MuiListItemText-primary': {
-                  color: '#000000',
-                },
-              }}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Main open={drawerOpen}>
-        <DrawerHeader />
-        <Outlet />
-      </Main>
+      <Grid container spacing={3}>
+        {/* 商品統計卡片 */}
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardHeader title="商品統計" />
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h4">{productStats.total}</Typography>
+                  <Typography color="textSecondary">總商品數</Typography>
+                </Box>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h4" color="success.main">
+                    {productStats.active}
+                  </Typography>
+                  <Typography color="textSecondary">上架中</Typography>
+                </Box>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h4" color="error.main">
+                    {productStats.inactive}
+                  </Typography>
+                  <Typography color="textSecondary">下架中</Typography>
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* 訂單狀態統計 - 修改標題顯示 */}
+        <Grid item xs={12} md={8}>
+          <Card>
+            <CardHeader 
+              title={
+                dateRange.start
+                  ? `${dateRange.start} 訂單處理狀態`  // 因為是同一個月，所以只顯示一個月份
+                  : "本月訂單處理狀態"
+              }
+            />
+            <CardContent>
+              <Box sx={{ height: 300 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={orderStatusStats}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {orderStatusStats.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* 每日訂單統計 - 修改標題 */}
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader 
+              title={
+                dateRange.start
+                  ? `${dateRange.start} 訂單統計`
+                  : "本月訂單統計"
+              }
+            />
+            <CardContent>
+              <Box sx={{ height: 400 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={orderStats}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="orderCount" name="訂單數" fill="#8884d8" />
+                    <Bar dataKey="totalAmount" name="總金額" fill="#82ca9d" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
 
-export default AdminDashboard; 
+export default AdminDashboard;

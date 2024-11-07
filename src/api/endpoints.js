@@ -20,5 +20,8 @@ export const API_ENDPOINTS = {
   GET_ORDERS: `${BASE_URL}/Order/GetOrders`,
   GET_ORDER_DETAILS: `${BASE_URL}/Order/GetOrderDetails`,
   UPDATE_ORDER_STATE: `${BASE_URL}/Order/UpdateOrderState`,
+
+  GET_PRODUCT_STATS: `${BASE_URL}/Prod/GetProductStats`,
+  GET_ORDER_STATS: `${BASE_URL}/Order/GetOrderStats`,
 };
 
