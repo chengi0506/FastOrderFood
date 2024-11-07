@@ -6,6 +6,7 @@ import {
   TextField,
   Typography,
   Paper,
+  InputLabel,
 } from '@mui/material';
 import {
   Upload as UploadIcon,
@@ -28,6 +29,10 @@ const LabelManagement = () => {
   const printRef = useRef();
   const [labelWidth, setLabelWidth] = useState(100);
   const [labelHeight, setLabelHeight] = useState(150);
+  const [titleColor, setTitleColor] = useState('#FFFFFF');
+  const [contentColor, setContentColor] = useState('#FFFFFF');
+  const [footerColor, setFooterColor] = useState('rgba(59,155,58)');
+  const [headerColor, setHeaderColor] = useState('#FFFFFF');
 
   // QR Code URL
   const qrCodeUrl = window.location.origin + ROUTES.HOME;
@@ -96,8 +101,8 @@ const LabelManagement = () => {
     try {
       // 顯示載入中提示
       Swal.fire({
-        title: '處理中',
-        text: '標籤產生中...',
+        title: '請等待',
+        text: '標籤製作中...',
         allowOutsideClick: false,
         didOpen: () => {
           Swal.showLoading();
@@ -237,6 +242,45 @@ const LabelManagement = () => {
           />
         </Box>
 
+        <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <InputLabel>標題文字顏色</InputLabel>
+            <input
+              type="color"
+              value={headerColor}
+              onChange={(e) => setHeaderColor(e.target.value)}
+              style={{ width: '50px', height: '50px', padding: 0, cursor: 'pointer' }}
+            />
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <InputLabel>副標題文字顏色</InputLabel>
+            <input
+              type="color"
+              value={titleColor}
+              onChange={(e) => setTitleColor(e.target.value)}
+              style={{ width: '50px', height: '50px', padding: 0, cursor: 'pointer' }}
+            />
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <InputLabel>內容文字顏色</InputLabel>
+            <input
+              type="color"
+              value={contentColor}
+              onChange={(e) => setContentColor(e.target.value)}
+              style={{ width: '50px', height: '50px', padding: 0, cursor: 'pointer' }}
+            />
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <InputLabel>頁尾文字顏色</InputLabel>
+            <input
+              type="color"
+              value={footerColor}
+              onChange={(e) => setFooterColor(e.target.value)}
+              style={{ width: '50px', height: '50px', padding: 0, cursor: 'pointer' }}
+            />
+          </Box>
+        </Box>
+
         <TextField
           fullWidth
           label="標題文字"
@@ -262,7 +306,7 @@ const LabelManagement = () => {
             component="label"
             startIcon={<UploadIcon />}
           >
-            選擇背景標籤
+            選擇背景圖片
             <input
               type="file"
               hidden
@@ -277,13 +321,13 @@ const LabelManagement = () => {
               startIcon={<DeleteIcon />}
               onClick={handleClearBackground}
             >
-              清除背景
+              清除背景圖片
             </Button>
           )}
         </Box>
       </Box>
 
-      {/* 添加一個固定尺寸的容���來包裹預覽區域 */}
+      {/* 預覽區域陰影 */}
       <Box
         sx={{
           width: '100%',
@@ -321,7 +365,15 @@ const LabelManagement = () => {
             borderRadius: '4px',
           }}
         >
-          線上點餐
+          <Typography
+            sx={{
+              fontSize: '50px', 
+              fontWeight: 'bold',
+              color: headerColor
+            }}
+          >
+            線上點餐
+          </Typography>
           <Typography
             sx={{
               textAlign: 'center',
@@ -331,7 +383,7 @@ const LabelManagement = () => {
               wordBreak: 'break-word',
               fontSize: '35px', 
               fontWeight: 'bold',
-              color: 'white'
+              color: titleColor
             }}
           >
             {labelTitleText}
@@ -352,7 +404,7 @@ const LabelManagement = () => {
               wordBreak: 'break-word',
               fontSize: '24px', 
               fontWeight: 'bold',
-              color: 'white'
+              color: contentColor
             }}
           >
             {labelText}
@@ -365,10 +417,10 @@ const LabelManagement = () => {
               fontSize: '24px', 
               fontWeight: 'bold',
               backgroundColor: 'white',
-              color: 'rgba(59,155,58)'
+              color: footerColor
             }}
           >
-              提前預約 取餐更快速
+            提前預約 取餐更快速
           </Typography>
         </Paper>
       </Box>

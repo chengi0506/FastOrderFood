@@ -153,7 +153,7 @@ function App() {
           />
           <Route path={ROUTES.ADMIN_LOGIN} element={<AdminLogin />} />
           <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />}>
-            <Route index element={<StoreManagement />} />
+            <Route index element={<AdminDashboard />} />
             <Route path="store" element={<StoreManagement />} />
             <Route path="products" element={<ProductManagement />} />
             <Route path="orders" element={<OrderManagement />} />
