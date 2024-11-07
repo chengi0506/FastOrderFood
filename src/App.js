@@ -16,6 +16,9 @@ import { API_ENDPOINTS } from './api/endpoints';
 import { ROUTES } from './constants/routes';
 import AdminLogin from './components/Admin/AdminLogin';
 import AdminDashboard from './components/Admin/AdminDashboard';
+import StoreManagement from './components/Admin/StoreManagement';
+import ProductManagement from './components/Admin/ProductManagement';
+import OrderManagement from './components/Admin/OrderManagement';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -148,7 +151,12 @@ function App() {
             element={<OrderConfirmationPage storeInfo={storeInfo} />} 
           />
           <Route path={ROUTES.ADMIN_LOGIN} element={<AdminLogin />} />
-          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="store" element={<StoreManagement />} />
+            <Route path="products" element={<ProductManagement />} />
+            <Route path="orders" element={<OrderManagement />} />
+          </Route>
         </Routes>
       </main>
       <Footer />
