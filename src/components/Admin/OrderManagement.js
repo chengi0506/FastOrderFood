@@ -335,7 +335,7 @@ const OrderManagement = () => {
                     alignItems: 'center', 
                     justifyContent: 'center',
                     p: 2,
-                    minHeight: '100px'  // 添加最小高度
+                    minHeight: '100px'
                   }}>
                     <CircularProgress size={30} />
                     <Typography sx={{ mt: 1, fontSize: '0.9rem' }}>
@@ -343,28 +343,48 @@ const OrderManagement = () => {
                     </Typography>
                   </Box>
                 ) : (
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>商品編號</TableCell>
-                        <TableCell>商品名稱</TableCell>
-                        <TableCell>數量</TableCell>
-                        <TableCell>小計</TableCell>
-                        <TableCell>備註</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {details.map((detail) => (
-                        <TableRow key={detail.id}>
-                          <TableCell align="left">{detail.prodId}</TableCell>
-                          <TableCell align="left">{detail.prodName}</TableCell>
-                          <TableCell align="left">{detail.quantity}</TableCell>
-                          <TableCell align="left">{detail.subtotal}</TableCell>
-                          <TableCell align="left">{detail.note}</TableCell>
+                  <>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>商品編號</TableCell>
+                          <TableCell>商品名稱</TableCell>
+                          <TableCell>數量</TableCell>
+                          <TableCell>小計</TableCell>
+                          <TableCell>備註</TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHead>
+                      <TableBody>
+                        {details.map((detail) => (
+                          <TableRow key={detail.id}>
+                            <TableCell align="left">{detail.prodId}</TableCell>
+                            <TableCell align="left">{detail.prodName}</TableCell>
+                            <TableCell align="left">{detail.quantity}</TableCell>
+                            <TableCell align="left">{detail.subtotal}</TableCell>
+                            <TableCell align="left">{detail.note}</TableCell>
+                          </TableRow>
+                        ))}
+                        <TableRow 
+                          sx={{ 
+                            '& td': { 
+                              fontWeight: 'bold',
+                              borderTop: '2px solid rgba(224, 224, 224, 1)',
+                              backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                            } 
+                          }}
+                        >
+                          <TableCell colSpan={2} align="right" sx={{ fontSize: '1.2rem' }}>合計：</TableCell>
+                          <TableCell align="left" sx={{ fontSize: '1.2rem' }}>
+                            {details.reduce((sum, detail) => sum + detail.quantity, 0)} 件
+                          </TableCell>
+                          <TableCell align="left" sx={{ fontSize: '1.2rem' }}>
+                            ${details.reduce((sum, detail) => sum + detail.subtotal, 0)}
+                          </TableCell>
+                          <TableCell />
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </>
                 )}
               </Box>
             </Collapse>
