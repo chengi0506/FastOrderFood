@@ -5,6 +5,7 @@ import LanguageSelector from './LanguageSelector';
 import fastIcon from '../assets/logo.png';
 import { API_ENDPOINTS } from '../api/endpoints';
 import { useTranslation } from 'react-i18next';
+import { API_KEY } from '../config/config';
 
 function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
   const [allMenuItems, setAllMenuItems] = useState([]);
@@ -19,6 +20,14 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
   const [storeInfo, setStoreInfo] = useState(null);
   const [detailsHeight, setDetailsHeight] = useState('100px');
   const [isLoading, setIsLoading] = useState(true);
+  const [showOrderSearch, setShowOrderSearch] = useState(false);
+  const [orderSearchData, setOrderSearchData] = useState({
+    apiKey: API_KEY,
+    orderID: '',
+    mobile: ''
+  });
+  const [searchResult, setSearchResult] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -192,6 +201,45 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
     return cartItem ? cartItem.quantity : 0;
   };
 
+  // 添加訂單查詢相關函數
+  const handleOrderSearch = async (e) => {
+    e.preventDefault();
+    setIsSearching(true);
+
+    try {
+      const response = await fetch(API_ENDPOINTS.SEARCH_ORDER, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderSearchData),
+      });
+
+      if (!response.ok) {
+        throw new Error('無訂單紀錄');
+      }
+
+      const data = await response.json();
+      setSearchResult(data);
+    } catch (error) {
+      console.error('Error searching order:', error);
+      setSearchResult({ error: '無訂單紀錄' });
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // 修改關閉查詢視窗的處理函數
+  const handleCloseSearch = () => {
+    setShowOrderSearch(false);
+    setOrderSearchData({
+      apiKey: API_KEY,
+      orderID: '',
+      mobile: ''
+    });
+    setSearchResult(null); // 同時清空查詢結果
+  };
+
   return (
     <div className="menu-page">
       <header ref={headerRef} className="top-nav sticky-header">
@@ -216,8 +264,16 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
               </div>
             )}
           </div>
-          <div className="language-selector-container">
-            <LanguageSelector />
+          <div className="header-actions">
+            <button 
+              className="order-search-button"
+              onClick={() => setShowOrderSearch(!showOrderSearch)}
+            >
+              查詢訂單
+            </button>
+            <div className="language-selector-container">
+              <LanguageSelector />
+            </div>
           </div>
         </div>
         <div className="categories-container">
@@ -255,6 +311,120 @@ function MenuPage({ cart, addToCart, onError, updatePickupTime }) {
           </div>
         </div>
       </header>
+
+      {/* 訂單查詢彈窗 */}
+      {showOrderSearch && (
+        <div className="order-search-modal">
+          <div className="order-search-content">
+            <h2>訂單查詢</h2>
+            <form onSubmit={handleOrderSearch}>
+              <div className="form-group">
+                <label>訂單編號：</label>
+                <input
+                  type="text"
+                  value={orderSearchData.orderID}
+                  onChange={(e) => setOrderSearchData({
+                    ...orderSearchData,
+                    orderID: e.target.value
+                  })}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>手機號碼：</label>
+                <input
+                  type="tel"
+                  value={orderSearchData.mobile}
+                  onChange={(e) => setOrderSearchData({
+                    ...orderSearchData,
+                    mobile: e.target.value
+                  })}
+                  required
+                />
+              </div>
+              <div className="form-buttons">
+                <button type="submit" disabled={isSearching}>
+                  {isSearching ? '查詢中...' : '查詢'}
+                </button>
+                <button type="button" onClick={handleCloseSearch}>
+                  關閉
+                </button>
+              </div>
+            </form>
+
+            {/* 查詢結果顯示 */}
+            {searchResult && (
+              <div className="search-result">
+                {searchResult.error ? (
+                  <p className="error-message">{searchResult.error}</p>
+                ) : (
+                  <div className="order-details">
+                    <div className="order-header">
+                      <h3>訂單資訊</h3>
+                      <span className={`order-status ${searchResult.state}`}>
+                        {searchResult.state}
+                      </span>
+                    </div>
+                    
+                    <div className="order-info-grid">
+                      <div className="info-item">
+                        <label>訂單編號</label>
+                        <span>{searchResult.orderID}</span>
+                      </div>
+                      <div className="info-item">
+                        <label>訂購時間</label>
+                        <span>{searchResult.dateTime}</span>
+                      </div>
+                      <div className="info-item">
+                        <label>訂購人</label>
+                        <span>{searchResult.name}</span>
+                      </div>
+                      <div className="info-item">
+                        <label>手機</label>
+                        <span>{searchResult.mobile}</span>
+                      </div>
+                      <div className="info-item">
+                        <label>取餐時間</label>
+                        <span>{searchResult.pickupTime}</span>
+                      </div>
+                      <div className="info-item">
+                        <label>總金額</label>
+                        <span className="total-amount">${searchResult.amt}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="order-items-section">
+                      <h4>訂購項目</h4>
+                      <div className="order-items-header">
+                        <span>品名</span>
+                        <span>數量</span>
+                        <span>小計</span>
+                      </div>
+                      <div className="order-items-list">
+                        {searchResult.items?.map((item, index) => (
+                          <div key={index} className="order-item">
+                            <span className="item-name">{item.prodName}</span>
+                            <span className="item-quantity">x {item.quantity}</span>
+                            <span className="item-subtotal">${item.subtotal}</span>
+                          </div>
+                        ))}
+                        <div className="order-item" style={{ fontWeight: 'bold' }}>
+                          <span className="item-name">總計</span>
+                          <span className="item-quantity">
+                            x {searchResult.items?.reduce((total, item) => total + item.quantity, 0)}
+                          </span>
+                          <span className="item-subtotal">${searchResult.amt}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="menu-content">
         {isLoading ? (
           <div className="loading-container">

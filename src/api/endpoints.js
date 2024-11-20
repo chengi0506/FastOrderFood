@@ -23,5 +23,6 @@ export const API_ENDPOINTS = {
 
   GET_PRODUCT_STATS: `${BASE_URL}/Prod/GetProductStats`,
   GET_ORDER_STATS: `${BASE_URL}/Order/GetOrderStats`,
+  SEARCH_ORDER: `${BASE_URL}/Order/SearchOrder`,
 };
 
