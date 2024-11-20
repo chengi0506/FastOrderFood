@@ -365,7 +365,7 @@ const OrderManagement = () => {
                           </TableRow>
                         ))}
                         <TableRow 
-                          sx={{ 
+                          sx={{
                             '& td': { 
                               fontWeight: 'bold',
                               borderTop: '2px solid rgba(224, 224, 224, 1)',
