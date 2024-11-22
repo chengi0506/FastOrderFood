@@ -70,6 +70,13 @@ const OrderManagement = () => {
   const [orderRowsPerPage, setOrderRowsPerPage] = useState(10);
   const [isOrdersLoading, setIsOrdersLoading] = useState(false);
   const [orderIdQuery, setOrderIdQuery] = useState('');
+  const [orderStats, setOrderStats] = useState({
+    total: 0,
+    pending: 0,    // 待處理
+    processing: 0, // 處理中
+    completed: 0,  // 已完成
+    cancelled: 0   // 已取消
+  });
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -78,6 +85,17 @@ const OrderManagement = () => {
     }
     fetchOrders();
   }, [navigate]);
+
+  const updateOrderStats = (ordersData) => {
+    const stats = {
+      total: ordersData.length,
+      pending: ordersData.filter(order => order.state === '待處理').length,
+      processing: ordersData.filter(order => order.state === '處理中').length,
+      completed: ordersData.filter(order => order.state === '已完成').length,
+      cancelled: ordersData.filter(order => order.state === '已取消').length
+    };
+    setOrderStats(stats);
+  };
 
   const fetchOrders = async () => {
     setIsOrdersLoading(true);
@@ -104,6 +122,7 @@ const OrderManagement = () => {
 
       const data = await response.json();
       setOrders(data);
+      updateOrderStats(data);
       setOrderPage(0);
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -397,12 +416,196 @@ const OrderManagement = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ 
-        mb: 3, 
         display: 'flex', 
         flexDirection: { xs: 'column', sm: 'row' },
-        gap: 2,
-        alignItems: 'center'
+        gap: { xs: 1, sm: 2 },
+        mb: 3,
+        backgroundColor: '#fff',
+        padding: { xs: 1, sm: 2 },
+        borderRadius: 1,
+        boxShadow: 1
       }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          p: { xs: 2, sm: 1 },
+          borderRadius: 1,
+          bgcolor: '#f5f5f5',
+          transition: 'transform 0.2s, box-shadow 0.2s',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: 2,
+          }
+        }}>
+          <Typography 
+            variant="subtitle2" 
+            color="textSecondary"
+            sx={{ 
+              fontSize: { xs: '1rem', sm: '0.875rem' }
+            }}
+          >
+            訂單總數
+          </Typography>
+          <Typography 
+            variant="h6"
+            sx={{ 
+              fontSize: { xs: '1.5rem', sm: '1.75rem' },
+              fontWeight: 'bold'
+            }}
+          >
+            {orderStats.total}
+          </Typography>
+        </Box>
+
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          p: { xs: 2, sm: 1 },
+          borderRadius: 1,
+          bgcolor: '#fff3cd',
+          transition: 'transform 0.2s, box-shadow 0.2s',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: 2,
+          }
+        }}>
+          <Typography 
+            variant="subtitle2" 
+            color="textSecondary"
+            sx={{ 
+              fontSize: { xs: '1rem', sm: '0.875rem' }
+            }}
+          >
+            待處理
+          </Typography>
+          <Typography 
+            variant="h6"
+            sx={{ 
+              fontSize: { xs: '1.5rem', sm: '1.75rem' },
+              fontWeight: 'bold',
+              color: '#856404'
+            }}
+          >
+            {orderStats.pending}
+          </Typography>
+        </Box>
+
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          p: { xs: 2, sm: 1 },
+          borderRadius: 1,
+          bgcolor: '#cce5ff',
+          transition: 'transform 0.2s, box-shadow 0.2s',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: 2,
+          }
+        }}>
+          <Typography 
+            variant="subtitle2" 
+            color="textSecondary"
+            sx={{ 
+              fontSize: { xs: '1rem', sm: '0.875rem' }
+            }}
+          >
+            處理中
+          </Typography>
+          <Typography 
+            variant="h6"
+            sx={{ 
+              fontSize: { xs: '1.5rem', sm: '1.75rem' },
+              fontWeight: 'bold',
+              color: '#004085'
+            }}
+          >
+            {orderStats.processing}
+          </Typography>
+        </Box>
+
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          p: { xs: 2, sm: 1 },
+          borderRadius: 1,
+          bgcolor: '#d4edda',
+          transition: 'transform 0.2s, box-shadow 0.2s',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: 2,
+          }
+        }}>
+          <Typography 
+            variant="subtitle2" 
+            color="textSecondary"
+            sx={{ 
+              fontSize: { xs: '1rem', sm: '0.875rem' }
+            }}
+          >
+            已完成
+          </Typography>
+          <Typography 
+            variant="h6"
+            sx={{ 
+              fontSize: { xs: '1.5rem', sm: '1.75rem' },
+              fontWeight: 'bold',
+              color: '#155724'
+            }}
+          >
+            {orderStats.completed}
+          </Typography>
+        </Box>
+
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          p: { xs: 2, sm: 1 },
+          borderRadius: 1,
+          bgcolor: '#f8d7da',
+          transition: 'transform 0.2s, box-shadow 0.2s',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: 2,
+          }
+        }}>
+          <Typography 
+            variant="subtitle2" 
+            color="textSecondary"
+            sx={{ 
+              fontSize: { xs: '1rem', sm: '0.875rem' }
+            }}
+          >
+            已取消
+          </Typography>
+          <Typography 
+            variant="h6"
+            sx={{ 
+              fontSize: { xs: '1.5rem', sm: '1.75rem' },
+              fontWeight: 'bold',
+              color: '#721c24'
+            }}
+          >
+            {orderStats.cancelled}
+          </Typography>
+        </Box>
+      </Box>
+
+      <Box sx={{ mb: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, alignItems: 'center' }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="開始日期"
