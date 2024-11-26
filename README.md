@@ -1,4 +1,4 @@
-![image](https://github.com/chengi0506/FastOrderFood/blob/master/2024-11-26_152309.jpg)
+![image](https://github.com/chengi0506/FastOrderFood/blob/master/2024-11-26_154122.jpg)
 ![image](https://github.com/chengi0506/FastOrderFood/blob/master/2024-11-26_152338.jpg)
 ![image](https://github.com/chengi0506/FastOrderFood/blob/master/2024-11-26_152348.jpg)
 ![image](https://github.com/chengi0506/FastOrderFood/blob/master/2024-11-26_152400.jpg)
